@@ -1,0 +1,44 @@
+name: Daily Job Digest
+
+on:
+  schedule:
+    # 05:00 UTC = 07:00 Europe/Berlin (CEST, summer) / 06:00 (CET, winter).
+    # GitHub Actions cron only understands UTC, so this drifts by an hour
+    # across the DST change instead of exactly matching "07:00 Berlin"
+    # year-round — still comfortably "early morning" either way.
+    - cron: "0 5 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - run: pip install -r requirements.txt
+
+      - name: Run digest
+        env:
+          ADZUNA_APP_ID: ${{ secrets.ADZUNA_APP_ID }}
+          ADZUNA_APP_KEY: ${{ secrets.ADZUNA_APP_KEY }}
+          JOOBLE_API_KEY: ${{ secrets.JOOBLE_API_KEY }}
+          GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          DIGEST_TO_EMAIL: ${{ secrets.DIGEST_TO_EMAIL }}
+          GULF_DIGEST_TO_EMAIL: ${{ secrets.GULF_DIGEST_TO_EMAIL }}
+        run: python -m job_digest.main
+
+      - name: Persist seen-jobs store
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/seen_jobs.json
+          git diff --cached --quiet || git commit -m "chore: update seen jobs store [skip ci]"
+          git push
