@@ -10,8 +10,6 @@ def build_note(scored_job):
         bits.append(scored_job.matched_role)
     bits.extend(scored_job.matched_skills[:4])
     note = "Matches: " + ", ".join(bits) if bits else "General skills match"
-    if scored_job.german_required:
-        note += " — ⚠️ may require fluent German"
     return note
 
 

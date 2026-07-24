@@ -36,12 +36,15 @@ SENIORITY_EXCLUDE = [
 # Matched against full description text where available (Adzuna, Jooble).
 EXPERIENCE_MIN_YEARS_TO_DROP = 3
 
-# German-fluency phrases — postings matching these are kept but flagged, not dropped.
-GERMAN_FLUENCY_PATTERNS = [
+# German-fluency phrases — a match here drops the posting outright (B2/C1/C2
+# level or unqualified native/fluent wording, which in practice means C1+).
+# B2/C1/C2 mentioned near "deutsch"/"german" is caught separately by a regex
+# in scoring.py; this list is for qualitative phrasing that doesn't name a
+# level explicitly.
+GERMAN_FLUENCY_DROP_PATTERNS = [
     "verhandlungssicheres deutsch", "verhandlungssicher in deutsch",
     "fließende deutschkenntnisse", "muttersprachliches deutsch",
-    "deutsch c1", "deutsch c2", "deutschkenntnisse c1", "deutschkenntnisse c2",
-    "fluent german", "native german", "german c1", "german c2",
+    "fluent german", "native german",
 ]
 
 # ---------------------------------------------------------------------------

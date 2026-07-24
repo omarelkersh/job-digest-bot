@@ -9,6 +9,14 @@ _YEARS_EXPERIENCE_RE = re.compile(
     re.IGNORECASE,
 )
 
+# "B2"/"C1"/"C2" mentioned near "Deutsch"/"German" — covers phrasings like
+# "Deutschkenntnisse mindestens B2", "German C1 required", "Deutsch B2-Niveau".
+_GERMAN_LEVEL_RE = re.compile(
+    r"\b(?:deutsch\w*|german)\b[^.]{0,20}\b(b2|c1|c2)\b"
+    r"|\b(b2|c1|c2)\b[^.]{0,20}\b(?:deutsch\w*|german)\b",
+    re.IGNORECASE,
+)
+
 # Role/domain keyword groups. A hit in ANY_ROLE gets the big bonus (this is a
 # Werkstudent/Praktikum/internship/thesis posting, the core target); a hit in
 # ANY_DOMAIN without a role hit gets the smaller bonus (relevant field, but the
@@ -36,7 +44,7 @@ _ROLE_PATTERNS = _compile(ROLE_KEYWORDS)
 _DOMAIN_PATTERNS = _compile(DOMAIN_KEYWORDS)
 _SENIORITY_PATTERNS = _compile(config.SENIORITY_EXCLUDE)
 _LOCATION_PATTERNS = _compile(config.LOCATION_BONUS_KEYWORDS)
-_GERMAN_FLUENCY_PATTERNS = _compile(config.GERMAN_FLUENCY_PATTERNS)
+_GERMAN_FLUENCY_PATTERNS = _compile(config.GERMAN_FLUENCY_DROP_PATTERNS)
 
 
 def _find_all(patterns, text):
@@ -56,7 +64,6 @@ class ScoredJob:
     score: int
     matched_skills: list = field(default_factory=list)
     matched_role: str = ""
-    german_required: bool = False
 
 
 def _requires_years_experience(text: str) -> bool:
@@ -75,6 +82,8 @@ def score_job(job):
     if _find_first(_SENIORITY_PATTERNS, title_lower):
         return None
     if job.description and _requires_years_experience(job.description.lower()):
+        return None
+    if _find_first(_GERMAN_FLUENCY_PATTERNS, full_text) or _GERMAN_LEVEL_RE.search(full_text):
         return None
 
     matched_skills = _find_all(_SKILL_PATTERNS, full_text)
@@ -102,14 +111,11 @@ def score_job(job):
     if total < config.MIN_SCORE:
         return None
 
-    german_required = bool(_find_first(_GERMAN_FLUENCY_PATTERNS, full_text))
-
     return ScoredJob(
         job=job,
         score=total,
         matched_skills=matched_skills,
         matched_role=matched_role or matched_domain,
-        german_required=german_required,
     )
 
 
