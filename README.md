@@ -1,13 +1,21 @@
 # Daily Job Digest Bot
 
-Fetches Werkstudent / internship / thesis-combo / junior Data Engineering,
-Data Science, ML Engineering and MLOps postings once a day, scores them
-against Omar's CV, and emails two separate digests:
+Fetches Data Engineering, Data Science, ML Engineering and MLOps postings
+once a day, scores them against Omar's CV, and emails three separate
+digests:
 
-- **🇪🇺 Europe** — Germany (Bundesagentur für Arbeit) + Germany/Austria/
-  Netherlands/France/Italy/Spain/Poland/UK/Switzerland (Adzuna)
-- **🏜️ Gulf** — Saudi Arabia, UAE, Qatar (Jooble — Adzuna doesn't cover
-  the Gulf)
+- **🇪🇺 Europe (Werkstudent)** — Germany/Austria/Switzerland, part-time /
+  student-job focused (Bundesagentur für Arbeit + Adzuna). Werkstudent,
+  Praktikum, and thesis-combo ("Werkstudent mit Abschlussarbeit") postings.
+- **🧳 Europe (Full-Time)** — Ireland, Netherlands, Spain (Adzuna + Jooble),
+  full-time only, English-language only — postings requiring Dutch,
+  Spanish, French, or any other language Omar doesn't have are dropped.
+- **🏜️ Gulf (Full-Time)** — Saudi Arabia, UAE, Qatar (Jooble — Adzuna
+  doesn't operate there), full-time only. Postings mentioning visa
+  sponsorship or a relocation package score higher, but it's a bonus, not
+  a hard requirement (most professional Gulf hiring of foreign nationals
+  comes with visa sponsorship as standard practice even when the listing
+  text doesn't say so explicitly).
 
 Runs for free on GitHub Actions, once a day, no server to maintain.
 
@@ -16,13 +24,14 @@ Runs for free on GitHub Actions, once a day, no server to maintain.
 ```
 job_digest/
   config.py          skills, role keywords, scoring weights, market definitions
-  scoring.py          keyword matching + drop rules (seniority, years-experience)
+  scoring.py          keyword matching + drop rules (seniority, years-experience,
+                        German/other-language requirements, full-time-only gate)
   store.py             data/seen_jobs.json dedup store
   emailer.py            Gmail SMTP HTML/plain-text email
   sources/
     arbeitsagentur.py   Bundesagentur für Arbeit Jobsuche API (no signup)
     adzuna.py            Adzuna API (Europe)
-    jooble.py            Jooble API (Gulf)
+    jooble.py            Jooble API (Gulf + Europe Full-Time backup)
   main.py                orchestrator — run with `python -m job_digest.main`
 ```
 
@@ -31,26 +40,32 @@ best matches per market → commit the updated dedup file back to the repo.
 If a market has zero new matches above the score threshold, no email is
 sent for it that day.
 
-### Known limitation
+### Known limitations
 
-The Bundesagentur API doesn't return full job description text via search,
-only the title and occupation category — so German-market scoring leans
-more heavily on title keywords than Adzuna/Jooble postings do, which
-include a description snippet.
+- The Bundesagentur API doesn't return full job description text via
+  search, only the title and occupation category — so Werkstudent-market
+  scoring (and the German-level / other-language drop rules, which need
+  description text) leans much more heavily on title keywords than
+  Adzuna/Jooble postings do.
+- Adzuna's public support for Ireland (`ie`) isn't confirmed the way the
+  other country codes are — if it turns out to be wrong, `adzuna.py` logs
+  a warning and skips it rather than failing the run. Jooble queries
+  Ireland by location string as a backup regardless, so Ireland coverage
+  doesn't depend solely on Adzuna.
 
 ## One-time setup
 
-### 1. Adzuna API keys (Europe digest)
+### 1. Adzuna API keys (Werkstudent + Europe Full-Time digests)
 
 1. Sign up free at https://developer.adzuna.com/
 2. Create an app — you'll get an **App ID** and **App Key**.
 
-### 2. Jooble API key (Gulf digest)
+### 2. Jooble API key (Gulf digest + Europe Full-Time backup)
 
 1. Sign up free at https://jooble.org/api/about
 2. You'll get a single API key.
 
-### 3. Gmail App Password (sends both digests)
+### 3. Gmail App Password (sends all three digests)
 
 1. Turn on 2-Step Verification on the Gmail account you want to send from:
    https://myaccount.google.com/security
@@ -88,7 +103,8 @@ secret**. Add each of these:
 | `JOOBLE_API_KEY` | from step 2 |
 | `GMAIL_ADDRESS` | the Gmail address you generated the app password for |
 | `GMAIL_APP_PASSWORD` | the 16-character app password from step 3 |
-| `DIGEST_TO_EMAIL` | where the Europe digest should land (e.g. your own inbox) |
+| `DIGEST_TO_EMAIL` | where the Werkstudent digest should land (e.g. your own inbox) |
+| `EUROPE_FULLTIME_DIGEST_TO_EMAIL` | *(optional)* where the Europe Full-Time digest should land — omit to reuse `DIGEST_TO_EMAIL` |
 | `GULF_DIGEST_TO_EMAIL` | *(optional)* where the Gulf digest should land — omit to reuse `DIGEST_TO_EMAIL` |
 
 None of these are ever hardcoded in the repo — the workflow reads them
@@ -126,17 +142,30 @@ re-run repeatedly while tuning.
 All of this lives in `job_digest/config.py`:
 
 - `SKILL_KEYWORDS` — CV skills that earn scoring points
-- `EUROPE_ROLE_QUERIES` / `GULF_ROLE_QUERIES` — search phrases per market
+- `EUROPE_ROLE_QUERIES` / `EUROPE_FULLTIME_ROLE_QUERIES` / `GULF_ROLE_QUERIES`
+  — search phrases per market
 - `SENIORITY_EXCLUDE` — title keywords that drop a posting outright
+- `FULLTIME_ONLY_TITLE_EXCLUDE` — title keywords (Werkstudent, internship,
+  part-time, thesis, ...) that drop a posting in the two full-time markets
+- `OTHER_LANGUAGES` — non-English/German/Arabic languages that, when
+  required near a fluency/native/speaker word, drop a posting (applies to
+  all three markets — it's never correct to surface a posting requiring
+  Dutch/Spanish/French/etc.)
+- `VISA_RELOCATION_KEYWORDS` / `VISA_RELOCATION_BONUS` — Gulf scoring bonus
+  for postings mentioning visa sponsorship or relocation support
 - `MIN_SCORE` (env `DIGEST_MIN_SCORE`, default 6) — minimum score to include
 - `MAX_JOBS_PER_EMAIL` (env `DIGEST_MAX_JOBS_PER_EMAIL`, default 30)
-- `ADZUNA_COUNTRIES` (env, default `de,at,nl,fr,it,es,pl,gb,ch`) — Adzuna
-  country codes queried for the Europe digest. If a code turns out to be
-  wrong/unsupported, `adzuna.py` logs a warning and skips it rather than
-  failing the run — check the Action logs after your first real run and
-  trim the list if any country consistently errors.
+- `ADZUNA_COUNTRIES` (env, default `de,at,ch`) — Werkstudent-market
+  countries, i.e. where "Werkstudent" is a real employment category
+- `ADZUNA_FULLTIME_COUNTRIES` (env, default `ie,nl,es`) / `JOOBLE_FULLTIME_LOCATIONS`
+  (env, default `Ireland,Netherlands,Spain`) — Europe Full-Time market
 - `GULF_LOCATIONS` (env, default `Saudi Arabia,United Arab Emirates,Qatar`)
 
-Postings requiring fluent/native German are **kept, not dropped** — they
-get a "⚠️ may require fluent German" note in the email so you can judge
-case by case.
+If a country code turns out to be wrong/unsupported, `adzuna.py` logs a
+warning and skips it rather than failing the run — check the Action logs
+after your first real run and trim the list if any country consistently
+errors.
+
+Postings requiring B2/C1/C2-level or unqualified fluent/native German (or
+any of the `OTHER_LANGUAGES`) are **dropped outright**, not flagged — there's
+no point seeing a posting that needs a language you don't have.

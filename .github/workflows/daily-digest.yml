@@ -32,6 +32,7 @@ jobs:
           GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
           DIGEST_TO_EMAIL: ${{ secrets.DIGEST_TO_EMAIL }}
+          EUROPE_FULLTIME_DIGEST_TO_EMAIL: ${{ secrets.EUROPE_FULLTIME_DIGEST_TO_EMAIL }}
           GULF_DIGEST_TO_EMAIL: ${{ secrets.GULF_DIGEST_TO_EMAIL }}
         run: python -m job_digest.main
 
