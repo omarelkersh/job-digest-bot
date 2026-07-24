@@ -47,6 +47,38 @@ GERMAN_FLUENCY_DROP_PATTERNS = [
     "fluent german", "native german",
 ]
 
+# Languages (besides English/Arabic, which Omar has, and German — handled
+# separately above at the A2-appropriate B2+ threshold) that a posting might
+# require. A match near a fluency/native/speaker word drops the posting —
+# used for the Ireland/Netherlands/Spain full-time market, where local-language
+# requirements (Dutch, Spanish, French, etc.) are common on some listings.
+OTHER_LANGUAGES = [
+    "dutch", "nederlands", "spanish", "español", "french", "français",
+    "portuguese", "português", "italian", "italiano", "polish", "polski",
+    "swedish", "danish", "norwegian", "finnish",
+]
+
+# Title keywords that disqualify a posting from a "full-time only" market
+# (Gulf, Europe Full-Time) — these markets should never surface Werkstudent/
+# internship/part-time postings.
+FULLTIME_ONLY_TITLE_EXCLUDE = [
+    "werkstudent", "praktikum", "praktikant", "internship", "intern",
+    "working student", "part-time", "part time", "teilzeit",
+    "thesis", "abschlussarbeit", "masterarbeit",
+]
+
+# Mentioning visa sponsorship / relocation support is a strong positive signal
+# for the Gulf market, but not a hard requirement — most professional hires of
+# foreign nationals in the Gulf come with visa sponsorship as standard practice
+# even when the listing text doesn't spell it out, so requiring the phrase
+# would hide too many genuine matches. It only adds bonus points when present.
+VISA_RELOCATION_KEYWORDS = [
+    "visa sponsorship", "visa sponsored", "sponsorship provided",
+    "relocation package", "relocation assistance", "relocation support",
+    "work permit provided", "expat package", "expatriate package",
+]
+VISA_RELOCATION_BONUS = 4
+
 # ---------------------------------------------------------------------------
 # Scoring weights
 # ---------------------------------------------------------------------------
@@ -63,9 +95,9 @@ LOCATION_BONUS_KEYWORDS = ["darmstadt", "remote", "home office", "homeoffice"]
 # ---------------------------------------------------------------------------
 # Market definitions
 # ---------------------------------------------------------------------------
-# "Europe" market: Germany (Bundesagentur) + Adzuna across Germany + neighbouring
-# European countries. Role queries include German-language Werkstudent/Praktikum/
-# Abschlussarbeit terms since these are Germany-specific employment categories.
+# "Europe" market: Germany (Bundesagentur) + Adzuna across the German-speaking
+# labour market, where "Werkstudent"/"Praktikum"/"Abschlussarbeit" are real,
+# distinct employment categories. Part-time/student-job focused.
 EUROPE_ROLE_QUERIES = [
     "Werkstudent Data Engineering",
     "Werkstudent Data Science",
@@ -83,41 +115,72 @@ EUROPE_ROLE_QUERIES = [
     "remote data engineer python",
 ]
 
-# Countries Adzuna's public API is confirmed/commonly documented to support in
-# Europe. If a code is wrong or later deprecated, adzuna.py logs a warning and
-# skips it rather than failing the whole run — adjust this list freely.
-ADZUNA_EUROPE_COUNTRIES = os.environ.get(
-    "ADZUNA_COUNTRIES", "de,at,nl,fr,it,es,pl,gb,ch"
-).split(",")
+# German-speaking countries only — this is where "Werkstudent" as a category
+# exists. Broader Europe (Ireland/Netherlands/Spain/...) is its own full-time
+# market below, so it isn't duplicated here.
+ADZUNA_EUROPE_COUNTRIES = os.environ.get("ADZUNA_COUNTRIES", "de,at,ch").split(",")
 
-# "Gulf" market: no Werkstudent-equivalent status exists here, so queries lean
-# on internship/graduate/junior framing instead of the German-specific terms.
-GULF_ROLE_QUERIES = [
-    "data engineer internship",
-    "data scientist internship",
+# "Europe Full-Time" market: full-time roles outside Germany, English-language
+# only. Adzuna's public support for "ie" (Ireland) isn't confirmed the way the
+# others are (adzuna.py skips/warns rather than fails if it's wrong), so
+# Jooble queries the same countries by location string as a redundant backup.
+EUROPE_FULLTIME_ROLE_QUERIES = [
+    "data engineer",
+    "data scientist",
+    "machine learning engineer",
+    "mlops engineer",
     "junior data engineer",
     "junior data scientist",
+    "graduate data engineer",
     "graduate machine learning engineer",
-    "mlops engineer",
+    "entry level data engineer",
+]
+
+ADZUNA_FULLTIME_COUNTRIES = os.environ.get("ADZUNA_FULLTIME_COUNTRIES", "ie,nl,es").split(",")
+JOOBLE_FULLTIME_LOCATIONS = os.environ.get(
+    "JOOBLE_FULLTIME_LOCATIONS", "Ireland,Netherlands,Spain"
+).split(",")
+
+# "Gulf" market: full-time only, via Jooble (Adzuna does not operate there).
+GULF_ROLE_QUERIES = [
     "data engineer",
+    "data scientist",
     "machine learning engineer",
+    "mlops engineer",
+    "junior data engineer",
+    "junior data scientist",
+    "data engineer visa sponsorship",
+    "data scientist relocation",
 ]
 
 GULF_LOCATIONS = os.environ.get(
     "GULF_LOCATIONS", "Saudi Arabia,United Arab Emirates,Qatar"
 ).split(",")
 
+# Note: the "requires a language Omar doesn't have" check (OTHER_LANGUAGES,
+# in scoring.py) applies globally to every market, not just Europe Full-Time —
+# it's never correct to surface a posting requiring Dutch/Spanish/French/etc.
+# regardless of which digest it'd land in.
 MARKETS = {
     "europe": {
-        "label": "Europe",
+        "label": "Europe (Werkstudent)",
         "subject_emoji": "\U0001F1EA\U0001F1FA",  # EU flag
         "recipient_env": "DIGEST_TO_EMAIL",
         "role_queries": EUROPE_ROLE_QUERIES,
+        "fulltime_only": False,
+    },
+    "europe_fulltime": {
+        "label": "Europe (Full-Time)",
+        "subject_emoji": "\U0001F9F3",  # suitcase
+        "recipient_env": "EUROPE_FULLTIME_DIGEST_TO_EMAIL",
+        "role_queries": EUROPE_FULLTIME_ROLE_QUERIES,
+        "fulltime_only": True,
     },
     "gulf": {
-        "label": "Gulf",
+        "label": "Gulf (Full-Time)",
         "subject_emoji": "\U0001F3DC️",  # desert
         "recipient_env": "GULF_DIGEST_TO_EMAIL",
         "role_queries": GULF_ROLE_QUERIES,
+        "fulltime_only": True,
     },
 }

@@ -39,6 +39,36 @@ def gather_europe_jobs():
     return jobs
 
 
+def gather_europe_fulltime_jobs():
+    jobs = []
+
+    adzuna_app_id = os.environ.get("ADZUNA_APP_ID")
+    adzuna_app_key = os.environ.get("ADZUNA_APP_KEY")
+    if adzuna_app_id and adzuna_app_key:
+        adzuna_jobs = adzuna.search(
+            adzuna_app_id, adzuna_app_key,
+            config.ADZUNA_FULLTIME_COUNTRIES, config.EUROPE_FULLTIME_ROLE_QUERIES,
+        )
+        log.info("Adzuna (Europe Full-Time): %d raw results", len(adzuna_jobs))
+        jobs += adzuna_jobs
+    else:
+        log.warning("ADZUNA_APP_ID/ADZUNA_APP_KEY not set — skipping Adzuna for Europe Full-Time digest")
+
+    # Adzuna's Ireland ("ie") support isn't confirmed, so Jooble covers the
+    # same countries by location string as a redundant backup.
+    jooble_key = os.environ.get("JOOBLE_API_KEY")
+    if jooble_key:
+        jooble_jobs = jooble.search(
+            jooble_key, config.JOOBLE_FULLTIME_LOCATIONS, config.EUROPE_FULLTIME_ROLE_QUERIES,
+        )
+        log.info("Jooble (Europe Full-Time): %d raw results", len(jooble_jobs))
+        jobs += jooble_jobs
+    else:
+        log.warning("JOOBLE_API_KEY not set — skipping Jooble for Europe Full-Time digest")
+
+    return jobs
+
+
 def gather_gulf_jobs():
     jooble_key = os.environ.get("JOOBLE_API_KEY")
     if not jooble_key:
@@ -51,6 +81,7 @@ def gather_gulf_jobs():
 
 GATHERERS = {
     "europe": gather_europe_jobs,
+    "europe_fulltime": gather_europe_fulltime_jobs,
     "gulf": gather_gulf_jobs,
 }
 
@@ -74,7 +105,7 @@ def run_market(market_key, seen_store, now):
     new_jobs = [j for j in jobs if seen_store.is_new(j.dedup_key)]
     log.info("[%s] %d unique / %d new (not previously sent)", market_key, len(jobs), len(new_jobs))
 
-    scored = scoring.score_and_rank(new_jobs)
+    scored = scoring.score_and_rank(new_jobs, fulltime_only=market.get("fulltime_only", False))
     scored = scored[: config.MAX_JOBS_PER_EMAIL]
     log.info("[%s] %d passed scoring threshold (MIN_SCORE=%d)", market_key, len(scored), config.MIN_SCORE)
 

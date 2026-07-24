@@ -17,6 +17,19 @@ _GERMAN_LEVEL_RE = re.compile(
     re.IGNORECASE,
 )
 
+# A language from config.OTHER_LANGUAGES mentioned near a fluency/native/
+# speaker word — covers "Fluent Dutch required", "native Spanish speaker",
+# "Spanish C1". Deliberately narrow level-word list (no generic "required"/
+# "essential") to avoid e.g. "polish your skills" false-matching on "Polish".
+_LANGUAGE_LEVEL_WORDS = r"(?:native|fluent|proficient|proficiency|mother\s*tongue|speaking|speaker|[bc][12])"
+_OTHER_LANGUAGE_RE = re.compile(
+    r"\b(" + "|".join(re.escape(l) for l in config.OTHER_LANGUAGES) + r")\b"
+    r"[^.]{0,20}\b" + _LANGUAGE_LEVEL_WORDS + r"\b"
+    r"|\b" + _LANGUAGE_LEVEL_WORDS + r"\b[^.]{0,20}"
+    r"\b(" + "|".join(re.escape(l) for l in config.OTHER_LANGUAGES) + r")\b",
+    re.IGNORECASE,
+)
+
 # Role/domain keyword groups. A hit in ANY_ROLE gets the big bonus (this is a
 # Werkstudent/Praktikum/internship/thesis posting, the core target); a hit in
 # ANY_DOMAIN without a role hit gets the smaller bonus (relevant field, but the
@@ -45,6 +58,8 @@ _DOMAIN_PATTERNS = _compile(DOMAIN_KEYWORDS)
 _SENIORITY_PATTERNS = _compile(config.SENIORITY_EXCLUDE)
 _LOCATION_PATTERNS = _compile(config.LOCATION_BONUS_KEYWORDS)
 _GERMAN_FLUENCY_PATTERNS = _compile(config.GERMAN_FLUENCY_DROP_PATTERNS)
+_FULLTIME_EXCLUDE_PATTERNS = _compile(config.FULLTIME_ONLY_TITLE_EXCLUDE)
+_VISA_RELOCATION_PATTERNS = _compile(config.VISA_RELOCATION_KEYWORDS)
 
 
 def _find_all(patterns, text):
@@ -64,6 +79,7 @@ class ScoredJob:
     score: int
     matched_skills: list = field(default_factory=list)
     matched_role: str = ""
+    matched_visa: str = ""
 
 
 def _requires_years_experience(text: str) -> bool:
@@ -74,7 +90,7 @@ def _requires_years_experience(text: str) -> bool:
     return False
 
 
-def score_job(job):
+def score_job(job, fulltime_only=False):
     """Return a ScoredJob, or None if the posting should be dropped outright."""
     title_lower = job.title.lower()
     full_text = f"{job.title} {job.description} {job.company}".lower()
@@ -84,6 +100,10 @@ def score_job(job):
     if job.description and _requires_years_experience(job.description.lower()):
         return None
     if _find_first(_GERMAN_FLUENCY_PATTERNS, full_text) or _GERMAN_LEVEL_RE.search(full_text):
+        return None
+    if _OTHER_LANGUAGE_RE.search(full_text):
+        return None
+    if fulltime_only and _find_first(_FULLTIME_EXCLUDE_PATTERNS, title_lower):
         return None
 
     matched_skills = _find_all(_SKILL_PATTERNS, full_text)
@@ -107,7 +127,10 @@ def score_job(job):
 
     location_score = config.LOCATION_BONUS if _find_first(_LOCATION_PATTERNS, full_text) else 0
 
-    total = skill_score + role_score + location_score
+    matched_visa = _find_first(_VISA_RELOCATION_PATTERNS, full_text)
+    visa_score = config.VISA_RELOCATION_BONUS if matched_visa else 0
+
+    total = skill_score + role_score + location_score + visa_score
     if total < config.MIN_SCORE:
         return None
 
@@ -116,11 +139,12 @@ def score_job(job):
         score=total,
         matched_skills=matched_skills,
         matched_role=matched_role or matched_domain,
+        matched_visa=matched_visa,
     )
 
 
-def score_and_rank(jobs):
-    scored = [score_job(j) for j in jobs]
+def score_and_rank(jobs, fulltime_only=False):
+    scored = [score_job(j, fulltime_only=fulltime_only) for j in jobs]
     scored = [s for s in scored if s is not None]
     scored.sort(key=lambda s: s.score, reverse=True)
     return scored
