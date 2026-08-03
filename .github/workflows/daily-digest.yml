@@ -34,6 +34,7 @@ jobs:
           DIGEST_TO_EMAIL: ${{ secrets.DIGEST_TO_EMAIL }}
           EUROPE_FULLTIME_DIGEST_TO_EMAIL: ${{ secrets.EUROPE_FULLTIME_DIGEST_TO_EMAIL }}
           GULF_DIGEST_TO_EMAIL: ${{ secrets.GULF_DIGEST_TO_EMAIL }}
+          REMOTE_DIGEST_TO_EMAIL: ${{ secrets.REMOTE_DIGEST_TO_EMAIL }}
         run: python -m job_digest.main
 
       - name: Persist seen-jobs store

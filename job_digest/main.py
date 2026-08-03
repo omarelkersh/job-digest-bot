@@ -79,10 +79,25 @@ def gather_gulf_jobs():
     return jobs
 
 
+def gather_remote_jobs():
+    adzuna_app_id = os.environ.get("ADZUNA_APP_ID")
+    adzuna_app_key = os.environ.get("ADZUNA_APP_KEY")
+    if not (adzuna_app_id and adzuna_app_key):
+        log.warning("ADZUNA_APP_ID/ADZUNA_APP_KEY not set — skipping Remote digest entirely")
+        return []
+    jobs = adzuna.search(
+        adzuna_app_id, adzuna_app_key,
+        config.ADZUNA_REMOTE_COUNTRIES, config.REMOTE_ROLE_QUERIES,
+    )
+    log.info("Adzuna (Remote): %d raw results", len(jobs))
+    return jobs
+
+
 GATHERERS = {
     "europe": gather_europe_jobs,
     "europe_fulltime": gather_europe_fulltime_jobs,
     "gulf": gather_gulf_jobs,
+    "remote": gather_remote_jobs,
 }
 
 
@@ -102,10 +117,18 @@ def run_market(market_key, seen_store, now):
     raw_jobs = GATHERERS[market_key]()
     jobs = dedupe(raw_jobs)
 
-    new_jobs = [j for j in jobs if seen_store.is_new(j.dedup_key)]
+    # Dedup keys are market-scoped — a job already sent in one digest can
+    # still legitimately appear in another (e.g. a remote-tagged posting
+    # relevant to both the Werkstudent and Remote digests).
+    new_jobs = [j for j in jobs if seen_store.is_new(f"{market_key}:{j.dedup_key}")]
     log.info("[%s] %d unique / %d new (not previously sent)", market_key, len(jobs), len(new_jobs))
 
-    scored = scoring.score_and_rank(new_jobs, fulltime_only=market.get("fulltime_only", False))
+    scored = scoring.score_and_rank(
+        new_jobs,
+        fulltime_only=market.get("fulltime_only", False),
+        allow_easy_roles=market.get("allow_easy_roles", False),
+        require_remote=market.get("require_remote", False),
+    )
     scored = scored[: config.MAX_JOBS_PER_EMAIL]
     log.info("[%s] %d passed scoring threshold (MIN_SCORE=%d)", market_key, len(scored), config.MIN_SCORE)
 
@@ -113,7 +136,7 @@ def run_market(market_key, seen_store, now):
     # low-scoring posting isn't re-evaluated and potentially emailed later
     # just because our keyword list changes.
     for j in jobs:
-        seen_store.mark_seen(j.dedup_key, market_key, now.isoformat())
+        seen_store.mark_seen(f"{market_key}:{j.dedup_key}", market_key, now.isoformat())
 
     if not scored:
         log.info("[%s] nothing to send", market_key)

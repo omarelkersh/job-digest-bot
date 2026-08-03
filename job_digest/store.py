@@ -8,6 +8,15 @@ from datetime import datetime, timedelta, timezone
 
 RETENTION_DAYS = 180
 
+# Keys used to be bare "source:id" (e.g. "arbeitsagentur:12345"), shared across
+# every market — meaning a job already sent in one digest would silently never
+# appear in another digest's email even though it's relevant there too. Keys
+# are now market-scoped ("europe:arbeitsagentur:12345"). Every key ever
+# written under the old scheme came from the "europe" market (the only one
+# that had run before this split), so migrate legacy bare keys by prefixing
+# "europe:" rather than losing the history and resending everything once.
+_LEGACY_SOURCE_PREFIXES = ("arbeitsagentur:", "adzuna:", "jooble:")
+
 
 class SeenStore:
     def __init__(self, path):
@@ -19,9 +28,15 @@ class SeenStore:
             return {}
         with open(self.path, "r", encoding="utf-8") as f:
             try:
-                return json.load(f)
+                raw = json.load(f)
             except json.JSONDecodeError:
                 return {}
+        migrated = {}
+        for key, meta in raw.items():
+            if key.startswith(_LEGACY_SOURCE_PREFIXES):
+                key = f"europe:{key}"
+            migrated[key] = meta
+        return migrated
 
     def is_new(self, key):
         return key not in self._data

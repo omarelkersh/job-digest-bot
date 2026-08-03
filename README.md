@@ -1,7 +1,7 @@
 # Daily Job Digest Bot
 
 Fetches Data Engineering, Data Science, ML Engineering and MLOps postings
-once a day, scores them against Omar's CV, and emails three separate
+once a day, scores them against Omar's CV, and emails four separate
 digests:
 
 - **🇪🇺 Europe (Werkstudent)** — Germany/Austria/Switzerland, part-time /
@@ -16,6 +16,12 @@ digests:
   a hard requirement (most professional Gulf hiring of foreign nationals
   comes with visa sponsorship as standard practice even when the listing
   text doesn't say so explicitly).
+- **🏠 Remote** — skill-matched remote roles (remote data engineer/
+  scientist/ML/etc.) plus lower-barrier "easy to do" tech-adjacent remote
+  roles (data annotation, QA testing, technical support), across the same
+  countries already used by the other Adzuna-backed markets. A posting must
+  actually look remote (mentions "remote"/"home office"/"work from home"/
+  etc.) to qualify — a plain title-keyword match on-site doesn't count.
 
 Runs for free on GitHub Actions, once a day, no server to maintain.
 
@@ -25,13 +31,14 @@ Runs for free on GitHub Actions, once a day, no server to maintain.
 job_digest/
   config.py          skills, role keywords, scoring weights, market definitions
   scoring.py          keyword matching + drop rules (seniority, years-experience,
-                        German/other-language requirements, full-time-only gate)
-  store.py             data/seen_jobs.json dedup store
+                        German/other-language requirements, full-time-only gate,
+                        remote-required gate, easy-role scoring)
+  store.py             data/seen_jobs.json dedup store (market-scoped keys)
   emailer.py            Gmail SMTP HTML/plain-text email
   sources/
     arbeitsagentur.py   Bundesagentur für Arbeit Jobsuche API (no signup)
-    adzuna.py            Adzuna API (Europe)
-    jooble.py            Jooble API (Gulf + Europe Full-Time backup)
+    adzuna.py            Adzuna API (Werkstudent, Europe Full-Time, Remote)
+    jooble.py            Jooble API (Gulf, Europe Full-Time backup)
   main.py                orchestrator — run with `python -m job_digest.main`
 ```
 
@@ -39,6 +46,12 @@ Each run: fetch → dedup against `data/seen_jobs.json` → score → email the
 best matches per market → commit the updated dedup file back to the repo.
 If a market has zero new matches above the score threshold, no email is
 sent for it that day.
+
+Dedup keys are **market-scoped** (`"<market>:<source>:<id>"`) — a posting
+already sent in one digest can still legitimately appear in a different
+digest (e.g. a remote-tagged Werkstudent posting is relevant to both the
+Werkstudent and Remote digests). Only repeats *within the same market* are
+suppressed.
 
 ### Known limitations
 
@@ -52,10 +65,17 @@ sent for it that day.
   a warning and skips it rather than failing the run. Jooble queries
   Ireland by location string as a backup regardless, so Ireland coverage
   doesn't depend solely on Adzuna.
+- Jooble's free tier defaults to a **500-request cap** (per their signup
+  confirmation). The Gulf + Europe Full-Time digests together use roughly
+  50 calls/day — comfortably fine if that's a one-time or high-frequency
+  reset, but worth watching (Action logs will show HTTP errors from
+  `jooble.py` if the quota is hit) if it turns out to be a low-frequency
+  cap. Jooble's own signup message says to contact them to raise it.
+  The Remote digest deliberately avoids Jooble entirely to not add to this.
 
 ## One-time setup
 
-### 1. Adzuna API keys (Werkstudent + Europe Full-Time digests)
+### 1. Adzuna API keys (Werkstudent + Europe Full-Time + Remote digests)
 
 1. Sign up free at https://developer.adzuna.com/
 2. Create an app — you'll get an **App ID** and **App Key**.
@@ -65,7 +85,7 @@ sent for it that day.
 1. Sign up free at https://jooble.org/api/about
 2. You'll get a single API key.
 
-### 3. Gmail App Password (sends all three digests)
+### 3. Gmail App Password (sends all four digests)
 
 1. Turn on 2-Step Verification on the Gmail account you want to send from:
    https://myaccount.google.com/security
@@ -106,6 +126,7 @@ secret**. Add each of these:
 | `DIGEST_TO_EMAIL` | where the Werkstudent digest should land (e.g. your own inbox) |
 | `EUROPE_FULLTIME_DIGEST_TO_EMAIL` | *(optional)* where the Europe Full-Time digest should land — omit to reuse `DIGEST_TO_EMAIL` |
 | `GULF_DIGEST_TO_EMAIL` | *(optional)* where the Gulf digest should land — omit to reuse `DIGEST_TO_EMAIL` |
+| `REMOTE_DIGEST_TO_EMAIL` | *(optional)* where the Remote digest should land — omit to reuse `DIGEST_TO_EMAIL` |
 
 None of these are ever hardcoded in the repo — the workflow reads them
 from `secrets.*` at run time.
@@ -142,17 +163,23 @@ re-run repeatedly while tuning.
 All of this lives in `job_digest/config.py`:
 
 - `SKILL_KEYWORDS` — CV skills that earn scoring points
-- `EUROPE_ROLE_QUERIES` / `EUROPE_FULLTIME_ROLE_QUERIES` / `GULF_ROLE_QUERIES`
-  — search phrases per market
+- `EUROPE_ROLE_QUERIES` / `EUROPE_FULLTIME_ROLE_QUERIES` / `GULF_ROLE_QUERIES` /
+  `REMOTE_ROLE_QUERIES` — search phrases per market
 - `SENIORITY_EXCLUDE` — title keywords that drop a posting outright
 - `FULLTIME_ONLY_TITLE_EXCLUDE` — title keywords (Werkstudent, internship,
-  part-time, thesis, ...) that drop a posting in the two full-time markets
+  part-time, thesis, ...) that drop a posting in the full-time-only markets
+  (Europe Full-Time, Gulf, Remote)
 - `OTHER_LANGUAGES` — non-English/German/Arabic languages that, when
   required near a fluency/native/speaker word, drop a posting (applies to
-  all three markets — it's never correct to surface a posting requiring
+  every market — it's never correct to surface a posting requiring
   Dutch/Spanish/French/etc.)
 - `VISA_RELOCATION_KEYWORDS` / `VISA_RELOCATION_BONUS` — Gulf scoring bonus
   for postings mentioning visa sponsorship or relocation support
+- `EASY_ROLE_KEYWORDS` / `EASY_ROLE_WEIGHT` — lower-barrier tech-adjacent
+  titles (data annotation, QA testing, technical support) that qualify a
+  posting for the Remote digest even without a strong skill/domain match
+- `REMOTE_INDICATOR_KEYWORDS` — required (not just bonus) for the Remote
+  market, so a plain "data engineer" search doesn't return on-site roles
 - `MIN_SCORE` (env `DIGEST_MIN_SCORE`, default 6) — minimum score to include
 - `MAX_JOBS_PER_EMAIL` (env `DIGEST_MAX_JOBS_PER_EMAIL`, default 30)
 - `ADZUNA_COUNTRIES` (env, default `de,at,ch`) — Werkstudent-market
@@ -160,6 +187,8 @@ All of this lives in `job_digest/config.py`:
 - `ADZUNA_FULLTIME_COUNTRIES` (env, default `ie,nl,es`) / `JOOBLE_FULLTIME_LOCATIONS`
   (env, default `Ireland,Netherlands,Spain`) — Europe Full-Time market
 - `GULF_LOCATIONS` (env, default `Saudi Arabia,United Arab Emirates,Qatar`)
+- `ADZUNA_REMOTE_COUNTRIES` (env, default: the union of the Werkstudent and
+  Europe Full-Time country lists — no new country-support uncertainty)
 
 If a country code turns out to be wrong/unsupported, `adzuna.py` logs a
 warning and skips it rather than failing the run — check the Action logs

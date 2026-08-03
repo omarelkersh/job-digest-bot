@@ -79,6 +79,25 @@ VISA_RELOCATION_KEYWORDS = [
 ]
 VISA_RELOCATION_BONUS = 4
 
+# "Easy to do" remote roles — still data/tech-adjacent, but lower-barrier than
+# a full Data Engineer/Scientist/ML title, so they wouldn't otherwise clear
+# the skill/domain-match gate in score_job(). Only used when a market opts in
+# via allow_easy_roles (currently just "remote").
+EASY_ROLE_KEYWORDS = [
+    "data annotation", "data labeling", "data labelling", "data entry",
+    "qa tester", "quality assurance tester", "quality assurance analyst",
+    "technical support", "it support",
+]
+EASY_ROLE_WEIGHT = 6
+
+# Indicates a posting is actually remote — required (not just bonus-scored)
+# for the "remote" market, since a plain "data engineer" search returns plenty
+# of on-site roles too.
+REMOTE_INDICATOR_KEYWORDS = [
+    "remote", "home office", "homeoffice", "work from home", "anywhere",
+    "distributed team",
+]
+
 # ---------------------------------------------------------------------------
 # Scoring weights
 # ---------------------------------------------------------------------------
@@ -157,6 +176,32 @@ GULF_LOCATIONS = os.environ.get(
     "GULF_LOCATIONS", "Saudi Arabia,United Arab Emirates,Qatar"
 ).split(",")
 
+# "Remote" market: skill-matched roles ("remote data engineer", "remote python
+# developer", ...) plus lower-barrier "easy to do" tech-adjacent roles (data
+# annotation, QA testing, technical support). Reuses the Adzuna countries
+# already configured above rather than adding new ones — no new coverage
+# uncertainty, and Jooble is deliberately NOT used here since the Gulf +
+# Europe Full-Time digests already use a meaningful share of Jooble's default
+# 500-request quota.
+REMOTE_ROLE_QUERIES = [
+    "remote data engineer",
+    "remote data scientist",
+    "remote machine learning engineer",
+    "remote data analyst",
+    "remote python developer",
+    "remote sql developer",
+    "remote junior data",
+    "remote data annotation",
+    "remote qa tester",
+    "remote technical support",
+]
+
+ADZUNA_REMOTE_COUNTRIES = (
+    os.environ.get("ADZUNA_REMOTE_COUNTRIES").split(",")
+    if os.environ.get("ADZUNA_REMOTE_COUNTRIES")
+    else list(dict.fromkeys(ADZUNA_EUROPE_COUNTRIES + ADZUNA_FULLTIME_COUNTRIES))
+)
+
 # Note: the "requires a language Omar doesn't have" check (OTHER_LANGUAGES,
 # in scoring.py) applies globally to every market, not just Europe Full-Time —
 # it's never correct to surface a posting requiring Dutch/Spanish/French/etc.
@@ -182,5 +227,14 @@ MARKETS = {
         "recipient_env": "GULF_DIGEST_TO_EMAIL",
         "role_queries": GULF_ROLE_QUERIES,
         "fulltime_only": True,
+    },
+    "remote": {
+        "label": "Remote",
+        "subject_emoji": "\U0001F3E0",  # house
+        "recipient_env": "REMOTE_DIGEST_TO_EMAIL",
+        "role_queries": REMOTE_ROLE_QUERIES,
+        "fulltime_only": True,
+        "require_remote": True,
+        "allow_easy_roles": True,
     },
 }

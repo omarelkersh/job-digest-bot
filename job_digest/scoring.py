@@ -60,6 +60,8 @@ _LOCATION_PATTERNS = _compile(config.LOCATION_BONUS_KEYWORDS)
 _GERMAN_FLUENCY_PATTERNS = _compile(config.GERMAN_FLUENCY_DROP_PATTERNS)
 _FULLTIME_EXCLUDE_PATTERNS = _compile(config.FULLTIME_ONLY_TITLE_EXCLUDE)
 _VISA_RELOCATION_PATTERNS = _compile(config.VISA_RELOCATION_KEYWORDS)
+_EASY_ROLE_PATTERNS = _compile(config.EASY_ROLE_KEYWORDS)
+_REMOTE_INDICATOR_PATTERNS = _compile(config.REMOTE_INDICATOR_KEYWORDS)
 
 
 def _find_all(patterns, text):
@@ -90,7 +92,7 @@ def _requires_years_experience(text: str) -> bool:
     return False
 
 
-def score_job(job, fulltime_only=False):
+def score_job(job, fulltime_only=False, allow_easy_roles=False, require_remote=False):
     """Return a ScoredJob, or None if the posting should be dropped outright."""
     title_lower = job.title.lower()
     full_text = f"{job.title} {job.description} {job.company}".lower()
@@ -105,18 +107,21 @@ def score_job(job, fulltime_only=False):
         return None
     if fulltime_only and _find_first(_FULLTIME_EXCLUDE_PATTERNS, title_lower):
         return None
+    if require_remote and not _find_first(_REMOTE_INDICATOR_PATTERNS, full_text):
+        return None
 
     matched_skills = _find_all(_SKILL_PATTERNS, full_text)
     skill_score = min(len(matched_skills) * config.SKILL_HIT_WEIGHT, config.SKILL_HIT_CAP)
 
     matched_role = _find_first(_ROLE_PATTERNS, title_lower)
     matched_domain = _find_first(_DOMAIN_PATTERNS, full_text)
+    matched_easy = _find_first(_EASY_ROLE_PATTERNS, full_text) if allow_easy_roles else ""
 
     # A "Werkstudent"/"internship" title alone isn't enough — the search terms
     # are broad enough to surface postings (e.g. general "Digitalisierung"
     # roles) with zero actual data/ML relevance. Require at least one real
-    # skill or domain signal before an explicit role-title match counts.
-    if not matched_skills and not matched_domain:
+    # skill, domain, or (where allowed) easy-role signal.
+    if not matched_skills and not matched_domain and not matched_easy:
         return None
 
     role_score = 0
@@ -124,6 +129,8 @@ def score_job(job, fulltime_only=False):
         role_score = config.ROLE_MATCH_WEIGHT
     elif matched_domain:
         role_score = config.DOMAIN_MATCH_WEIGHT
+    elif matched_easy:
+        role_score = config.EASY_ROLE_WEIGHT
 
     location_score = config.LOCATION_BONUS if _find_first(_LOCATION_PATTERNS, full_text) else 0
 
@@ -138,13 +145,16 @@ def score_job(job, fulltime_only=False):
         job=job,
         score=total,
         matched_skills=matched_skills,
-        matched_role=matched_role or matched_domain,
+        matched_role=matched_role or matched_domain or matched_easy,
         matched_visa=matched_visa,
     )
 
 
-def score_and_rank(jobs, fulltime_only=False):
-    scored = [score_job(j, fulltime_only=fulltime_only) for j in jobs]
+def score_and_rank(jobs, fulltime_only=False, allow_easy_roles=False, require_remote=False):
+    scored = [
+        score_job(j, fulltime_only=fulltime_only, allow_easy_roles=allow_easy_roles, require_remote=require_remote)
+        for j in jobs
+    ]
     scored = [s for s in scored if s is not None]
     scored.sort(key=lambda s: s.score, reverse=True)
     return scored
