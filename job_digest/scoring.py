@@ -76,16 +76,17 @@ def _haversine_km(lat1, lon1, lat2, lon2):
     return 2 * r * math.asin(math.sqrt(a))
 
 
-def _frankfurt_proximity_score(job, full_text):
+def _frankfurt_distance_km(job, full_text):
+    """Distance used purely for sort order — never affects whether a posting
+    clears MIN_SCORE. Real coordinates when available; otherwise a coarse
+    city-name-tier estimate; None ("unknown/far") when neither is available."""
     if job.latitude is not None and job.longitude is not None:
-        distance_km = _haversine_km(job.latitude, job.longitude, *config.FRANKFURT_COORDS)
-        falloff = max(0.0, 1 - distance_km / config.FRANKFURT_PROXIMITY_RADIUS_KM)
-        return round(config.FRANKFURT_PROXIMITY_MAX_BONUS * falloff)
+        return _haversine_km(job.latitude, job.longitude, *config.FRANKFURT_COORDS)
     if _find_first(_FRANKFURT_NEAR_PATTERNS, full_text):
-        return config.FRANKFURT_NEAR_BONUS
+        return config.FRANKFURT_NEAR_APPROX_KM
     if _find_first(_FRANKFURT_MID_PATTERNS, full_text):
-        return config.FRANKFURT_MID_BONUS
-    return 0
+        return config.FRANKFURT_MID_APPROX_KM
+    return None
 
 
 def _find_all(patterns, text):
@@ -106,6 +107,7 @@ class ScoredJob:
     matched_skills: list = field(default_factory=list)
     matched_role: str = ""
     matched_visa: str = ""
+    distance_km: float = None
 
 
 def _requires_years_experience(text: str) -> bool:
@@ -160,12 +162,13 @@ def score_job(job, fulltime_only=False, allow_easy_roles=False, require_remote=F
         role_score = config.EASY_ROLE_WEIGHT
 
     location_score = config.LOCATION_BONUS if _find_first(_LOCATION_PATTERNS, full_text) else 0
-    frankfurt_score = _frankfurt_proximity_score(job, full_text)
 
     matched_visa = _find_first(_VISA_RELOCATION_PATTERNS, full_text)
     visa_score = config.VISA_RELOCATION_BONUS if matched_visa else 0
 
-    total = skill_score + role_score + location_score + frankfurt_score + visa_score
+    # Relevance only — distance to Frankfurt never affects inclusion, only
+    # display order (see score_and_rank's sort key below).
+    total = skill_score + role_score + location_score + visa_score
     if total < config.MIN_SCORE:
         return None
 
@@ -175,6 +178,7 @@ def score_job(job, fulltime_only=False, allow_easy_roles=False, require_remote=F
         matched_skills=matched_skills,
         matched_role=matched_role or matched_domain or matched_easy,
         matched_visa=matched_visa,
+        distance_km=_frankfurt_distance_km(job, full_text),
     )
 
 
@@ -190,5 +194,8 @@ def score_and_rank(jobs, fulltime_only=False, allow_easy_roles=False, require_re
         for j in jobs
     ]
     scored = [s for s in scored if s is not None]
-    scored.sort(key=lambda s: s.score, reverse=True)
+    # Closer to Frankfurt first; unknown/far distance sorts last; relevance
+    # score is the tiebreaker within the same distance bucket (or across
+    # postings that are all "unknown distance", e.g. Gulf/Remote markets).
+    scored.sort(key=lambda s: (s.distance_km if s.distance_km is not None else float("inf"), -s.score))
     return scored

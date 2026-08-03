@@ -98,15 +98,13 @@ REMOTE_INDICATOR_KEYWORDS = [
     "distributed team",
 ]
 
-# Proximity to Frankfurt (Omar is based in Darmstadt, ~30km away) — the closer
-# a job is, the more points it earns. Uses real coordinates when the source
-# provides them (Bundesagentur always does; Adzuna sometimes does), scored on
-# a linear falloff to 0 at FRANKFURT_PROXIMITY_RADIUS_KM. When no coordinates
-# are available (Jooble never provides them), falls back to a coarser
-# city-name tier match.
+# Proximity to Frankfurt (Omar is based in Darmstadt, ~30km away) — purely a
+# SORT key (closer listed first within an email), never a factor in whether a
+# posting is included or dropped; that's decided by MIN_SCORE alone. Uses
+# real coordinates when the source provides them (Bundesagentur always does;
+# Adzuna sometimes does); falls back to a coarse city-name-tier distance
+# estimate when no coordinates are available (Jooble never provides them).
 FRANKFURT_COORDS = (50.1109, 8.6821)
-FRANKFURT_PROXIMITY_MAX_BONUS = 6
-FRANKFURT_PROXIMITY_RADIUS_KM = 300
 FRANKFURT_NEAR_CITIES = [
     "frankfurt", "darmstadt", "wiesbaden", "mainz", "offenbach",
     "rhein-main", "rüsselsheim", "hanau",
@@ -115,8 +113,8 @@ FRANKFURT_MID_CITIES = [
     "mannheim", "kassel", "gießen", "giessen", "koblenz",
     "würzburg", "wuerzburg", "heidelberg", "aschaffenburg",
 ]
-FRANKFURT_NEAR_BONUS = 6
-FRANKFURT_MID_BONUS = 3
+FRANKFURT_NEAR_APPROX_KM = 20   # approximate distance estimate for the near-city tier
+FRANKFURT_MID_APPROX_KM = 120   # approximate distance estimate for the mid-city tier
 
 # ---------------------------------------------------------------------------
 # Scoring weights

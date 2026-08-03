@@ -27,11 +27,13 @@ digests:
   actually look remote (mentions "remote"/"home office"/"work from home"/
   etc.) to qualify — a plain title-keyword match on-site doesn't count.
 
-Every market also scores proximity to Frankfurt (Omar is based in nearby
-Darmstadt) — closer postings earn more points, using real coordinates when
-the source provides them (Bundesagentur always does) or a city-name fallback
-otherwise. It's a bonus, not a filter, so it never excludes anything — a
-Gulf or Remote posting just doesn't get the bonus.
+Every market also sorts by proximity to Frankfurt (Omar is based in nearby
+Darmstadt) — closer postings are listed first within each email, using real
+coordinates when the source provides them (Bundesagentur always does) or a
+city-name fallback otherwise. This is purely a display-order tiebreaker —
+it never affects whether a posting is included or dropped (that's decided
+entirely by MIN_SCORE); a Gulf or Remote posting with unknown distance just
+sorts after ones with a known distance, ranked by relevance among themselves.
 
 Runs for free on GitHub Actions, once a day, no server to maintain.
 
@@ -190,10 +192,10 @@ All of this lives in `job_digest/config.py`:
   posting for the Remote digest even without a strong skill/domain match
 - `REMOTE_INDICATOR_KEYWORDS` — required (not just bonus) for the Remote
   market, so a plain "data engineer" search doesn't return on-site roles
-- `FRANKFURT_COORDS` / `FRANKFURT_PROXIMITY_MAX_BONUS` / `FRANKFURT_PROXIMITY_RADIUS_KM`
-  — the coordinate-based proximity bonus; `FRANKFURT_NEAR_CITIES` /
-  `FRANKFURT_MID_CITIES` (+ their bonuses) are the text-based fallback for
-  sources without coordinates
+- `FRANKFURT_COORDS` — reference point for the real-coordinate distance sort;
+  `FRANKFURT_NEAR_CITIES` / `FRANKFURT_MID_CITIES` (+ their `_APPROX_KM`
+  values) are the city-name-tier fallback distance estimate for sources
+  without coordinates (Jooble)
 - `MIN_SCORE` (env `DIGEST_MIN_SCORE`, default 6) — minimum score to include
 - `MAX_JOBS_PER_EMAIL` (env `DIGEST_MAX_JOBS_PER_EMAIL`, default 30)
 - `ADZUNA_COUNTRIES` (env, default `de`) — Werkstudent-market countries

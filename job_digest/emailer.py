@@ -12,6 +12,8 @@ def build_note(scored_job):
     note = "Matches: " + ", ".join(bits) if bits else "General skills match"
     if scored_job.matched_visa:
         note += " — 💼 mentions visa sponsorship/relocation"
+    if scored_job.distance_km is not None:
+        note += f" — 📍 ~{round(scored_job.distance_km)}km from Frankfurt"
     return note
 
 
