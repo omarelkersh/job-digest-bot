@@ -4,12 +4,16 @@ Fetches Data Engineering, Data Science, ML Engineering and MLOps postings
 once a day, scores them against Omar's CV, and emails four separate
 digests:
 
-- **🇪🇺 Europe (Werkstudent)** — Germany/Austria/Switzerland, part-time /
-  student-job focused (Bundesagentur für Arbeit + Adzuna). Werkstudent,
-  Praktikum, and thesis-combo ("Werkstudent mit Abschlussarbeit") postings.
-- **🧳 Europe (Full-Time)** — Ireland, Netherlands, Spain (Adzuna + Jooble),
-  full-time only, English-language only — postings requiring Dutch,
-  Spanish, French, or any other language Omar doesn't have are dropped.
+- **🇪🇺 Europe (Werkstudent)** — Germany only, part-time/student-job focused
+  (Bundesagentur für Arbeit + Adzuna). Requires an explicit Werkstudent/
+  Praktikum/Internship/Thesis/Working Student/junior title match — a bare
+  "Data Engineer" posting with no part-time signal doesn't qualify here
+  (it belongs in Europe Full-Time instead).
+- **🧳 Europe (Full-Time)** — all of Europe (Adzuna: Germany, Austria,
+  Switzerland, Ireland, Netherlands, Spain, France, Italy, Poland, UK, +
+  Jooble as an Ireland backup), full-time only, English-language only —
+  postings requiring Dutch, Spanish, French, or any other language Omar
+  doesn't have are dropped.
 - **🏜️ Gulf (Full-Time)** — Saudi Arabia, UAE, Qatar (Jooble — Adzuna
   doesn't operate there), full-time only. Postings mentioning visa
   sponsorship or a relocation package score higher, but it's a bonus, not
@@ -22,6 +26,12 @@ digests:
   countries already used by the other Adzuna-backed markets. A posting must
   actually look remote (mentions "remote"/"home office"/"work from home"/
   etc.) to qualify — a plain title-keyword match on-site doesn't count.
+
+Every market also scores proximity to Frankfurt (Omar is based in nearby
+Darmstadt) — closer postings earn more points, using real coordinates when
+the source provides them (Bundesagentur always does) or a city-name fallback
+otherwise. It's a bonus, not a filter, so it never excludes anything — a
+Gulf or Remote posting just doesn't get the bonus.
 
 Runs for free on GitHub Actions, once a day, no server to maintain.
 
@@ -180,12 +190,15 @@ All of this lives in `job_digest/config.py`:
   posting for the Remote digest even without a strong skill/domain match
 - `REMOTE_INDICATOR_KEYWORDS` — required (not just bonus) for the Remote
   market, so a plain "data engineer" search doesn't return on-site roles
+- `FRANKFURT_COORDS` / `FRANKFURT_PROXIMITY_MAX_BONUS` / `FRANKFURT_PROXIMITY_RADIUS_KM`
+  — the coordinate-based proximity bonus; `FRANKFURT_NEAR_CITIES` /
+  `FRANKFURT_MID_CITIES` (+ their bonuses) are the text-based fallback for
+  sources without coordinates
 - `MIN_SCORE` (env `DIGEST_MIN_SCORE`, default 6) — minimum score to include
 - `MAX_JOBS_PER_EMAIL` (env `DIGEST_MAX_JOBS_PER_EMAIL`, default 30)
-- `ADZUNA_COUNTRIES` (env, default `de,at,ch`) — Werkstudent-market
-  countries, i.e. where "Werkstudent" is a real employment category
-- `ADZUNA_FULLTIME_COUNTRIES` (env, default `ie,nl,es`) / `JOOBLE_FULLTIME_LOCATIONS`
-  (env, default `Ireland,Netherlands,Spain`) — Europe Full-Time market
+- `ADZUNA_COUNTRIES` (env, default `de`) — Werkstudent-market countries
+- `ADZUNA_FULLTIME_COUNTRIES` (env, default `de,at,ch,ie,nl,es,fr,it,pl,gb`) /
+  `JOOBLE_FULLTIME_LOCATIONS` (env, default `Ireland`) — Europe Full-Time market
 - `GULF_LOCATIONS` (env, default `Saudi Arabia,United Arab Emirates,Qatar`)
 - `ADZUNA_REMOTE_COUNTRIES` (env, default: the union of the Werkstudent and
   Europe Full-Time country lists — no new country-support uncertainty)

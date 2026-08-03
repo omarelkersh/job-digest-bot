@@ -44,7 +44,8 @@ def search(queries, wo="Deutschland", days_old=3, size=100, timeout=20):
             if not ref:
                 continue
             locations = item.get("stellenlokationen") or [{}]
-            ort = (locations[0].get("adresse") or {}).get("ort", "")
+            loc0 = locations[0]
+            ort = (loc0.get("adresse") or {}).get("ort", "")
             jobs.append(
                 Job(
                     source="arbeitsagentur",
@@ -55,6 +56,8 @@ def search(queries, wo="Deutschland", days_old=3, size=100, timeout=20):
                     date_posted=item.get("datumErsteVeroeffentlichung", ""),
                     url=DETAIL_URL.format(ref=ref),
                     description=" ".join(item.get("alleBerufe", []) or []),
+                    latitude=loc0.get("breite"),
+                    longitude=loc0.get("laenge"),
                 )
             )
     return jobs

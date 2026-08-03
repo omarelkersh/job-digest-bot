@@ -128,6 +128,7 @@ def run_market(market_key, seen_store, now):
         fulltime_only=market.get("fulltime_only", False),
         allow_easy_roles=market.get("allow_easy_roles", False),
         require_remote=market.get("require_remote", False),
+        require_role_match=market.get("require_role_match", False),
     )
     scored = scored[: config.MAX_JOBS_PER_EMAIL]
     log.info("[%s] %d passed scoring threshold (MIN_SCORE=%d)", market_key, len(scored), config.MIN_SCORE)

@@ -98,6 +98,26 @@ REMOTE_INDICATOR_KEYWORDS = [
     "distributed team",
 ]
 
+# Proximity to Frankfurt (Omar is based in Darmstadt, ~30km away) — the closer
+# a job is, the more points it earns. Uses real coordinates when the source
+# provides them (Bundesagentur always does; Adzuna sometimes does), scored on
+# a linear falloff to 0 at FRANKFURT_PROXIMITY_RADIUS_KM. When no coordinates
+# are available (Jooble never provides them), falls back to a coarser
+# city-name tier match.
+FRANKFURT_COORDS = (50.1109, 8.6821)
+FRANKFURT_PROXIMITY_MAX_BONUS = 6
+FRANKFURT_PROXIMITY_RADIUS_KM = 300
+FRANKFURT_NEAR_CITIES = [
+    "frankfurt", "darmstadt", "wiesbaden", "mainz", "offenbach",
+    "rhein-main", "rüsselsheim", "hanau",
+]
+FRANKFURT_MID_CITIES = [
+    "mannheim", "kassel", "gießen", "giessen", "koblenz",
+    "würzburg", "wuerzburg", "heidelberg", "aschaffenburg",
+]
+FRANKFURT_NEAR_BONUS = 6
+FRANKFURT_MID_BONUS = 3
+
 # ---------------------------------------------------------------------------
 # Scoring weights
 # ---------------------------------------------------------------------------
@@ -134,15 +154,16 @@ EUROPE_ROLE_QUERIES = [
     "remote data engineer python",
 ]
 
-# German-speaking countries only — this is where "Werkstudent" as a category
-# exists. Broader Europe (Ireland/Netherlands/Spain/...) is its own full-time
-# market below, so it isn't duplicated here.
-ADZUNA_EUROPE_COUNTRIES = os.environ.get("ADZUNA_COUNTRIES", "de,at,ch").split(",")
+# Germany only — the part-time/Werkstudent digest is strictly Germany now.
+ADZUNA_EUROPE_COUNTRIES = os.environ.get("ADZUNA_COUNTRIES", "de").split(",")
 
-# "Europe Full-Time" market: full-time roles outside Germany, English-language
-# only. Adzuna's public support for "ie" (Ireland) isn't confirmed the way the
-# others are (adzuna.py skips/warns rather than fails if it's wrong), so
-# Jooble queries the same countries by location string as a redundant backup.
+# "Europe Full-Time" market: full-time roles across all of Europe (including
+# Germany — a German full-time posting won't double up with the part-time
+# digest because that market requires an explicit Werkstudent/Praktikum/
+# thesis role-title match now, see require_role_match below). Adzuna's public
+# support for "ie" (Ireland) isn't confirmed the way the others are
+# (adzuna.py skips/warns rather than fails if it's wrong), so Jooble queries
+# Ireland by location string as a redundant backup.
 EUROPE_FULLTIME_ROLE_QUERIES = [
     "data engineer",
     "data scientist",
@@ -155,10 +176,13 @@ EUROPE_FULLTIME_ROLE_QUERIES = [
     "entry level data engineer",
 ]
 
-ADZUNA_FULLTIME_COUNTRIES = os.environ.get("ADZUNA_FULLTIME_COUNTRIES", "ie,nl,es").split(",")
-JOOBLE_FULLTIME_LOCATIONS = os.environ.get(
-    "JOOBLE_FULLTIME_LOCATIONS", "Ireland,Netherlands,Spain"
+ADZUNA_FULLTIME_COUNTRIES = os.environ.get(
+    "ADZUNA_FULLTIME_COUNTRIES", "de,at,ch,ie,nl,es,fr,it,pl,gb"
 ).split(",")
+# Jooble backup kept to just Ireland (the one genuinely uncertain Adzuna code)
+# rather than broadened to match — Gulf + this backup already use a
+# meaningful share of Jooble's default 500-request quota.
+JOOBLE_FULLTIME_LOCATIONS = os.environ.get("JOOBLE_FULLTIME_LOCATIONS", "Ireland").split(",")
 
 # "Gulf" market: full-time only, via Jooble (Adzuna does not operate there).
 GULF_ROLE_QUERIES = [
@@ -213,6 +237,7 @@ MARKETS = {
         "recipient_env": "DIGEST_TO_EMAIL",
         "role_queries": EUROPE_ROLE_QUERIES,
         "fulltime_only": False,
+        "require_role_match": True,
     },
     "europe_fulltime": {
         "label": "Europe (Full-Time)",

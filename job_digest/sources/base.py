@@ -11,6 +11,8 @@ class Job:
     date_posted: str
     url: str
     description: str = ""
+    latitude: float = None
+    longitude: float = None
 
     @property
     def dedup_key(self) -> str:

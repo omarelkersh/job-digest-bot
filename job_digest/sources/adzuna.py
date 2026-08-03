@@ -54,6 +54,11 @@ def search(app_id, app_key, countries, queries, max_days_old=2, results_per_page
                     continue
                 company = (item.get("company") or {}).get("display_name", "")
                 location = (item.get("location") or {}).get("display_name", "")
+                try:
+                    latitude = float(item["latitude"]) if item.get("latitude") is not None else None
+                    longitude = float(item["longitude"]) if item.get("longitude") is not None else None
+                except (TypeError, ValueError):
+                    latitude = longitude = None
                 jobs.append(
                     Job(
                         source="adzuna",
@@ -64,6 +69,8 @@ def search(app_id, app_key, countries, queries, max_days_old=2, results_per_page
                         date_posted=(item.get("created") or "")[:10],
                         url=item.get("redirect_url", ""),
                         description=item.get("description", ""),
+                        latitude=latitude,
+                        longitude=longitude,
                     )
                 )
     return jobs

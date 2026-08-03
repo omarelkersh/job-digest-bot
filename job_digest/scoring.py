@@ -1,3 +1,4 @@
+import math
 import re
 from dataclasses import dataclass, field
 
@@ -62,6 +63,29 @@ _FULLTIME_EXCLUDE_PATTERNS = _compile(config.FULLTIME_ONLY_TITLE_EXCLUDE)
 _VISA_RELOCATION_PATTERNS = _compile(config.VISA_RELOCATION_KEYWORDS)
 _EASY_ROLE_PATTERNS = _compile(config.EASY_ROLE_KEYWORDS)
 _REMOTE_INDICATOR_PATTERNS = _compile(config.REMOTE_INDICATOR_KEYWORDS)
+_FRANKFURT_NEAR_PATTERNS = _compile(config.FRANKFURT_NEAR_CITIES)
+_FRANKFURT_MID_PATTERNS = _compile(config.FRANKFURT_MID_CITIES)
+
+
+def _haversine_km(lat1, lon1, lat2, lon2):
+    r = 6371.0
+    phi1, phi2 = math.radians(lat1), math.radians(lat2)
+    dphi = math.radians(lat2 - lat1)
+    dlambda = math.radians(lon2 - lon1)
+    a = math.sin(dphi / 2) ** 2 + math.cos(phi1) * math.cos(phi2) * math.sin(dlambda / 2) ** 2
+    return 2 * r * math.asin(math.sqrt(a))
+
+
+def _frankfurt_proximity_score(job, full_text):
+    if job.latitude is not None and job.longitude is not None:
+        distance_km = _haversine_km(job.latitude, job.longitude, *config.FRANKFURT_COORDS)
+        falloff = max(0.0, 1 - distance_km / config.FRANKFURT_PROXIMITY_RADIUS_KM)
+        return round(config.FRANKFURT_PROXIMITY_MAX_BONUS * falloff)
+    if _find_first(_FRANKFURT_NEAR_PATTERNS, full_text):
+        return config.FRANKFURT_NEAR_BONUS
+    if _find_first(_FRANKFURT_MID_PATTERNS, full_text):
+        return config.FRANKFURT_MID_BONUS
+    return 0
 
 
 def _find_all(patterns, text):
@@ -92,7 +116,7 @@ def _requires_years_experience(text: str) -> bool:
     return False
 
 
-def score_job(job, fulltime_only=False, allow_easy_roles=False, require_remote=False):
+def score_job(job, fulltime_only=False, allow_easy_roles=False, require_remote=False, require_role_match=False):
     """Return a ScoredJob, or None if the posting should be dropped outright."""
     title_lower = job.title.lower()
     full_text = f"{job.title} {job.description} {job.company}".lower()
@@ -110,10 +134,13 @@ def score_job(job, fulltime_only=False, allow_easy_roles=False, require_remote=F
     if require_remote and not _find_first(_REMOTE_INDICATOR_PATTERNS, full_text):
         return None
 
+    matched_role = _find_first(_ROLE_PATTERNS, title_lower)
+    if require_role_match and not matched_role:
+        return None
+
     matched_skills = _find_all(_SKILL_PATTERNS, full_text)
     skill_score = min(len(matched_skills) * config.SKILL_HIT_WEIGHT, config.SKILL_HIT_CAP)
 
-    matched_role = _find_first(_ROLE_PATTERNS, title_lower)
     matched_domain = _find_first(_DOMAIN_PATTERNS, full_text)
     matched_easy = _find_first(_EASY_ROLE_PATTERNS, full_text) if allow_easy_roles else ""
 
@@ -133,11 +160,12 @@ def score_job(job, fulltime_only=False, allow_easy_roles=False, require_remote=F
         role_score = config.EASY_ROLE_WEIGHT
 
     location_score = config.LOCATION_BONUS if _find_first(_LOCATION_PATTERNS, full_text) else 0
+    frankfurt_score = _frankfurt_proximity_score(job, full_text)
 
     matched_visa = _find_first(_VISA_RELOCATION_PATTERNS, full_text)
     visa_score = config.VISA_RELOCATION_BONUS if matched_visa else 0
 
-    total = skill_score + role_score + location_score + visa_score
+    total = skill_score + role_score + location_score + frankfurt_score + visa_score
     if total < config.MIN_SCORE:
         return None
 
@@ -150,9 +178,15 @@ def score_job(job, fulltime_only=False, allow_easy_roles=False, require_remote=F
     )
 
 
-def score_and_rank(jobs, fulltime_only=False, allow_easy_roles=False, require_remote=False):
+def score_and_rank(jobs, fulltime_only=False, allow_easy_roles=False, require_remote=False, require_role_match=False):
     scored = [
-        score_job(j, fulltime_only=fulltime_only, allow_easy_roles=allow_easy_roles, require_remote=require_remote)
+        score_job(
+            j,
+            fulltime_only=fulltime_only,
+            allow_easy_roles=allow_easy_roles,
+            require_remote=require_remote,
+            require_role_match=require_role_match,
+        )
         for j in jobs
     ]
     scored = [s for s in scored if s is not None]
