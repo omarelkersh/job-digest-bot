@@ -1,0 +1,10 @@
+{
+  "functions": {
+    "api/generate_cv.py": {
+      "maxDuration": 30
+    },
+    "api/status.py": {
+      "maxDuration": 15
+    }
+  }
+}

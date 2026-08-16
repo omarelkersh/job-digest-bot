@@ -1,8 +1,7 @@
 import logging
 import os
-import sys
 
-from . import config, emailer, scoring, store
+from . import config, emailer, feed, scoring, store
 from .sources import adzuna, arbeitsagentur, jooble
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
@@ -15,8 +14,11 @@ DRY_RUN = os.environ.get("DRY_RUN", "").lower() in ("1", "true", "yes")
 def _env(name, required=True, default=None):
     val = os.environ.get(name, default)
     if required and not val:
-        log.error("Missing required environment variable: %s", name)
-        sys.exit(1)
+        # Raise rather than exit the whole process — a missing/broken secret
+        # should fail this one market (caught by main()'s per-market
+        # try/except) without skipping the other markets or the final
+        # seen_store/job_feed save() calls for a completely unrelated reason.
+        raise RuntimeError(f"Missing required environment variable: {name}")
     return val
 
 
@@ -112,7 +114,7 @@ def dedupe(jobs):
     return unique
 
 
-def run_market(market_key, seen_store, now):
+def run_market(market_key, seen_store, job_feed, now):
     market = config.MARKETS[market_key]
     raw_jobs = GATHERERS[market_key]()
     jobs = dedupe(raw_jobs)
@@ -123,15 +125,22 @@ def run_market(market_key, seen_store, now):
     new_jobs = [j for j in jobs if seen_store.is_new(f"{market_key}:{j.dedup_key}")]
     log.info("[%s] %d unique / %d new (not previously sent)", market_key, len(jobs), len(new_jobs))
 
-    scored = scoring.score_and_rank(
+    scored_all = scoring.score_and_rank(
         new_jobs,
         fulltime_only=market.get("fulltime_only", False),
         allow_easy_roles=market.get("allow_easy_roles", False),
         require_remote=market.get("require_remote", False),
         require_role_match=market.get("require_role_match", False),
     )
-    scored = scored[: config.MAX_JOBS_PER_EMAIL]
-    log.info("[%s] %d passed scoring threshold (MIN_SCORE=%d)", market_key, len(scored), config.MIN_SCORE)
+    log.info("[%s] %d passed scoring threshold (MIN_SCORE=%d)", market_key, len(scored_all), config.MIN_SCORE)
+
+    # The portal feed keeps everything that cleared the bar; the email is
+    # capped separately so a single digest doesn't get overwhelming.
+    if not DRY_RUN:
+        for sj in scored_all:
+            job_feed.add(market_key, market["label"], sj, now.isoformat())
+
+    scored = scored_all[: config.MAX_JOBS_PER_EMAIL]
 
     # Mark every fetched job (not just ones that scored) as seen, so a
     # low-scoring posting isn't re-evaluated and potentially emailed later
@@ -165,17 +174,19 @@ def run_market(market_key, seen_store, now):
 def main():
     now = store.utcnow()
     seen_store = store.SeenStore(DATA_PATH)
+    job_feed = feed.JobFeed()
 
     for market_key in config.MARKETS:
         try:
-            run_market(market_key, seen_store, now)
+            run_market(market_key, seen_store, job_feed, now)
         except Exception:
             log.exception("[%s] run failed", market_key)
 
     if DRY_RUN:
-        log.info("DRY_RUN set — not persisting seen_jobs.json")
+        log.info("DRY_RUN set — not persisting seen_jobs.json or docs/jobs.json")
     else:
         seen_store.save(now)
+        job_feed.save(now)
 
 
 if __name__ == "__main__":

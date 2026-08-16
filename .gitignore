@@ -3,3 +3,8 @@ __pycache__/
 *.pyc
 .venv/
 venv/
+
+# Never commit — contains Omar's name/phone/email; lives as a Vercel env
+# var (MASTER_CV_JSON) instead. Keep any local copy outside the repo.
+master_cv*.json
+portal_api/.vercel/

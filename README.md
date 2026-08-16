@@ -37,6 +37,23 @@ sorts after ones with a known distance, ranked by relevance among themselves.
 
 Runs for free on GitHub Actions, once a day, no server to maintain.
 
+## Job portal
+
+Every job that clears the score threshold (not just the ones capped into an
+email) also lands in a browsable portal — search, filter by market/score/
+status, sort by distance-to-Frankfurt, track status (New → Shortlisted →
+Applied → Interview → Rejected), and generate a tailored CV PDF for any
+specific job with one click.
+
+- **Frontend**: `docs/` — static, hosted free on GitHub Pages, reads
+  `docs/jobs.json` (written by every digest run).
+- **Backend**: `portal_api/` — two Vercel Python functions; one persists
+  status changes back to the repo, one calls the Claude API to tailor a CV
+  and returns it as a PDF. **This one has real per-use billing** on your
+  Anthropic account, unlike everything else in this project. See
+  [portal_api/README.md](portal_api/README.md) for full setup (GitHub
+  Pages, Vercel, API keys).
+
 ## How it works
 
 ```
@@ -46,12 +63,22 @@ job_digest/
                         German/other-language requirements, full-time-only gate,
                         remote-required gate, easy-role scoring)
   store.py             data/seen_jobs.json dedup store (market-scoped keys)
+  feed.py               docs/jobs.json portal feed (superset of what's emailed)
   emailer.py            Gmail SMTP HTML/plain-text email
   sources/
     arbeitsagentur.py   Bundesagentur für Arbeit Jobsuche API (no signup)
     adzuna.py            Adzuna API (Werkstudent, Europe Full-Time, Remote)
     jooble.py            Jooble API (Gulf, Europe Full-Time backup)
   main.py                orchestrator — run with `python -m job_digest.main`
+
+docs/                  job portal — static, hosted free on GitHub Pages
+  index.html / app.js / style.css / config.js
+  jobs.json              written by every digest run
+  status.json             written by the portal backend
+
+portal_api/            job portal backend — Vercel Python functions (real
+                         per-use Claude API billing; see its own README)
+  api/status.py, api/generate_cv.py, api/_shared.py
 ```
 
 Each run: fetch → dedup against `data/seen_jobs.json` → score → email the

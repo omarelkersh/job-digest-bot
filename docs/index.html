@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Omar's Job Portal</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <h1>Job Portal</h1>
+    <div class="topbar-meta">
+      <span id="job-count">– jobs</span>
+      <span id="generated-at"></span>
+    </div>
+  </header>
+
+  <section class="controls">
+    <input id="search" type="search" placeholder="Search title or company…">
+
+    <div class="chip-group" id="market-chips"></div>
+
+    <select id="status-filter">
+      <option value="">All statuses</option>
+      <option value="new">New</option>
+      <option value="shortlisted">Shortlisted</option>
+      <option value="applied">Applied</option>
+      <option value="interview">Interview</option>
+      <option value="rejected">Rejected</option>
+    </select>
+
+    <label class="min-score-label">
+      Min score
+      <input id="min-score" type="number" value="0" min="0" style="width:4em">
+    </label>
+
+    <select id="sort-by">
+      <option value="score">Sort: Score</option>
+      <option value="distance">Sort: Distance to Frankfurt</option>
+      <option value="date">Sort: Date posted</option>
+      <option value="first_seen">Sort: Newest in feed</option>
+    </select>
+
+    <label class="hide-rejected-label">
+      <input id="hide-rejected" type="checkbox" checked>
+      Hide rejected
+    </label>
+  </section>
+
+  <main id="job-list" class="job-list">
+    <p class="loading">Loading jobs…</p>
+  </main>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
