@@ -76,9 +76,10 @@ docs/                  job portal — static, hosted free on GitHub Pages
   jobs.json              written by every digest run
   status.json             written by the portal backend
 
-portal_api/            job portal backend — Vercel Python functions (real
-                         per-use Claude API billing; see its own README)
-  api/status.py, api/generate_cv.py, api/_shared.py
+portal_api/            job portal backend — single Vercel Python (Flask) app
+                         (real per-use Claude API billing; see its own README)
+  app.py                 routes: /api/status, /api/generate_cv
+  _shared.py
 ```
 
 Each run: fetch → dedup against `data/seen_jobs.json` → score → email the

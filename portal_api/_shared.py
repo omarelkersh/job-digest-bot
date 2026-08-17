@@ -1,6 +1,4 @@
-"""Shared helpers for the portal's Vercel Python functions. Prefixed with an
-underscore so Vercel bundles it as a shared module instead of its own route.
-"""
+"""Shared helpers for the portal's Vercel Python backend."""
 import base64
 import json
 import os

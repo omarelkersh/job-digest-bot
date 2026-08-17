@@ -1,14 +1,19 @@
 # Job Portal Backend
 
-Two Vercel Python serverless functions backing the portal at `docs/index.html`
-(served free via GitHub Pages):
+One Vercel Python (Flask) app, `app.py`, backing the portal at
+`docs/index.html` (served free via GitHub Pages). It's a single app — not
+one file per route — because Vercel's Python framework detection requires
+exactly one Flask entrypoint per project once `flask` is in
+`requirements.txt`; splitting routes into separate files under `api/` makes
+Vercel unable to pick a default entrypoint.
 
-- `api/status.py` — updates a job's status (New/Shortlisted/Applied/Interview/
-  Rejected) by committing `docs/status.json` back to the repo via the GitHub API.
-- `api/generate_cv.py` — looks up a job from `docs/jobs.json`, calls the Claude
-  API to decide how to tailor the CV (which bullets, in what order, tailored
-  summary — never inventing facts, see the system prompt in the file), builds
-  the PDF with reportlab, and streams it back for download.
+- `POST /api/status` — updates a job's status (New/Shortlisted/Applied/
+  Interview/Rejected) by committing `docs/status.json` back to the repo via
+  the GitHub API.
+- `POST /api/generate_cv` — looks up a job from `docs/jobs.json`, calls the
+  Claude API to decide how to tailor the CV (which bullets, in what order,
+  tailored summary — never inventing facts, see the system prompt in the
+  file), builds the PDF with reportlab, and streams it back for download.
 
 **Cost note:** `generate_cv.py` calls the Claude API on every click — that's
 real, ongoing per-use billing on your Anthropic account, unlike the free job

@@ -11,11 +11,13 @@ from reportlab.lib.units import mm
 from reportlab.platypus import (HRFlowable, Paragraph, SimpleDocTemplate,
                                  Spacer, Table, TableStyle)
 
-from _shared import cors_headers, find_job, load_master_cv
+from _shared import cors_headers, find_job, load_master_cv, read_repo_json, write_repo_json
 
 app = Flask(__name__)
 
 MODEL = os.environ.get("ANTHROPIC_MODEL", "claude-sonnet-5")
+
+ALLOWED_STATUSES = {"new", "shortlisted", "applied", "interview", "rejected"}
 
 SYSTEM_PROMPT = """You are tailoring Omar El Kersh's CV for one specific job posting.
 
@@ -249,9 +251,37 @@ def build_pdf(master_cv, tailored):
     return buf.read()
 
 
-@app.route("/", defaults={"path": ""}, methods=["POST", "OPTIONS"])
-@app.route("/<path:path>", methods=["POST", "OPTIONS"])
-def generate_cv(path):
+@app.route("/api/status", methods=["POST", "OPTIONS"])
+def status():
+    if request.method == "OPTIONS":
+        return ("", 204, cors_headers())
+
+    body = request.get_json(force=True, silent=True) or {}
+    job_id = body.get("job_id")
+    new_status = body.get("status")
+
+    if not job_id or new_status not in ALLOWED_STATUSES:
+        resp = jsonify({"error": "job_id and a valid status are required"})
+        return resp, 400, cors_headers()
+
+    from datetime import datetime, timezone
+
+    status_data, sha = read_repo_json("docs/status.json", default={})
+    status_data[job_id] = {
+        "status": new_status,
+        "updated_at": datetime.now(timezone.utc).isoformat(),
+    }
+    write_repo_json(
+        "docs/status.json", status_data,
+        f"portal: {job_id} -> {new_status} [skip ci]", sha=sha,
+    )
+
+    resp = jsonify({"ok": True})
+    return resp, 200, cors_headers()
+
+
+@app.route("/api/generate_cv", methods=["POST", "OPTIONS"])
+def generate_cv():
     if request.method == "OPTIONS":
         return ("", 204, cors_headers())
 
