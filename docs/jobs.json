@@ -1,4 +1,754 @@
 {
-  "generated_at": null,
-  "jobs": []
+  "generated_at": "2026-08-17T05:25:18.461101+00:00",
+  "jobs": [
+    {
+      "id": "europe:adzuna:5844677514",
+      "market": "europe",
+      "market_label": "Europe (Werkstudent)",
+      "source": "adzuna",
+      "title": "Werkstudent Machine Learning Engineering (d/m/w/x)",
+      "company": "Mercedes-Benz Tech Innovation",
+      "location": "Hagsfeld, Karlsruhe",
+      "url": "https://www.adzuna.de/details/5844677514?utm_medium=api&utm_source=c76d2273",
+      "date_posted": "2026-08-17",
+      "description": "Life is always about becoming… Im Leben geht es darum, sich auf eine Reise zu begeben, um die beste Version unseres zukünftigen Selbst zu werden. Während wir Neues entdecken, stellen wir uns Herausforderungen, meistern sie und wachsen über uns hinaus. Bewerben Sie sich bei Mercedes-Benz und finden Sie den Aufgabenbereich, in dem Sie Ihre Talente individuell entfalten können. Dabei werden Sie von visionären Kolleginnen und Kollegen unterstützt, die Ihren Pioniergeist teilen. Bei uns einzusteigen…",
+      "score": 10,
+      "matched_skills": [
+        "machine learning"
+      ],
+      "matched_role": "werkstudent",
+      "matched_visa": "",
+      "distance_km": 121.17150736320404,
+      "first_seen": "2026-08-17T05:25:18.461101+00:00"
+    },
+    {
+      "id": "europe:adzuna:5844397113",
+      "market": "europe",
+      "market_label": "Europe (Werkstudent)",
+      "source": "adzuna",
+      "title": "Werkstudent Machine Learning Engineering (d/m/w/x)",
+      "company": "Mercedes-Benz Tech Innovation",
+      "location": "Karlsruhe, Karlsruhe (Kreis)",
+      "url": "https://www.adzuna.de/details/5844397113?utm_medium=api&utm_source=c76d2273",
+      "date_posted": "2026-08-16",
+      "description": "Life is always about becoming… Im Leben geht es darum, sich auf eine Reise zu begeben, um die beste Version unseres zukünftigen Selbst zu werden. Während wir Neues entdecken, stellen wir uns Herausforderungen, meistern sie und wachsen über uns hinaus. Bewerben Sie sich bei Mercedes-Benz und finden Sie den Aufgabenbereich, in dem Sie Ihre Talente individuell entfalten können. Dabei werden Sie von visionären Kolleginnen und Kollegen unterstützt, die Ihren Pioniergeist teilen. Bei uns einzusteigen…",
+      "score": 10,
+      "matched_skills": [
+        "machine learning"
+      ],
+      "matched_role": "werkstudent",
+      "matched_visa": "",
+      "distance_km": 124.91178817478504,
+      "first_seen": "2026-08-17T05:25:18.461101+00:00"
+    },
+    {
+      "id": "europe:adzuna:5844422780",
+      "market": "europe",
+      "market_label": "Europe (Werkstudent)",
+      "source": "adzuna",
+      "title": "Working student Machine Learning Engineering (m/f/x)",
+      "company": "Mercedes-Benz Tech Innovation",
+      "location": "Karlsruhe, Karlsruhe (Kreis)",
+      "url": "https://www.adzuna.de/details/5844422780?utm_medium=api&utm_source=c76d2273",
+      "date_posted": "2026-08-16",
+      "description": "Life is always about becoming… Becoming means going on a journey to be the best version of our future selves. While we discover new things, we will face challenges, master them and grow beyond our individual limits. Apply for a job at Mercedes-Benz and find your individual role and workspace to unleash your talents to the fullest. Empowered by visionary colleagues who share the same pioneering spirit. Joining us means becoming part of a global team that aims to build the most desirable cars in …",
+      "score": 10,
+      "matched_skills": [
+        "machine learning"
+      ],
+      "matched_role": "working student",
+      "matched_visa": "",
+      "distance_km": 124.91178817478504,
+      "first_seen": "2026-08-17T05:25:18.461101+00:00"
+    },
+    {
+      "id": "europe:adzuna:5844407705",
+      "market": "europe",
+      "market_label": "Europe (Werkstudent)",
+      "source": "adzuna",
+      "title": "Working student Machine Learning Engineering (m/f/x)",
+      "company": "Mercedes-Benz Tech Innovation",
+      "location": "Karlsruhe, Karlsruhe (Kreis)",
+      "url": "https://www.adzuna.de/details/5844407705?utm_medium=api&utm_source=c76d2273",
+      "date_posted": "2026-08-16",
+      "description": "Apply now! We are Mercedes-Benz Tech Innovation - but we don't build cars: We define the future with technology. As the largest tech company of Mercedes-Benz Group AG, around 2,500 employees in Ulm, the Stuttgart area, Berlin and Karlsruhe as well as in international tech hubs work on the technology trends of tomorrow's mobility. We are united by our enthusiasm for innovation and the latest technologies - combined with the conviction that individual freedom and personal responsibility are cruci…",
+      "score": 10,
+      "matched_skills": [
+        "machine learning"
+      ],
+      "matched_role": "working student",
+      "matched_visa": "",
+      "distance_km": 124.91178817478504,
+      "first_seen": "2026-08-17T05:25:18.461101+00:00"
+    },
+    {
+      "id": "europe_fulltime:adzuna:5842841110",
+      "market": "europe_fulltime",
+      "market_label": "Europe (Full-Time)",
+      "source": "adzuna",
+      "title": "(Junior) Data Scientist (m/w/d) - Datenbankentwicklung/BI, Ingenieur",
+      "company": "Reply Deutschland SE",
+      "location": "Frankfurt am Main, Hessen",
+      "url": "https://www.adzuna.de/details/5842841110?utm_medium=api&utm_source=c76d2273",
+      "date_posted": "2026-08-15",
+      "description": " Aufgaben - Als (Junior) Data Scientist (m/w/d) entwickelst und implementierst du eigenständig Datenmodelle und -algorithmen für unsere kundenspezifischen Lösungen. Dabei identifizierst und analysierst du Probleme in einem analytischen Rahmen - Du entwickelst und wartest Datenpipelines und Dashboards. Dabei arbeitest du an einer Vielzahl von datenbezogenen Komponenten wie Datenplattformen, Dashboards und Produkten rund um Data und Machine Learning - Arbeit an komplexen Projekten und Datensätzen…",
+      "score": 10,
+      "matched_skills": [
+        "machine learning"
+      ],
+      "matched_role": "junior",
+      "matched_visa": "",
+      "distance_km": 3.068041241930425,
+      "first_seen": "2026-08-17T05:25:18.461101+00:00"
+    },
+    {
+      "id": "europe_fulltime:adzuna:5844230574",
+      "market": "europe_fulltime",
+      "market_label": "Europe (Full-Time)",
+      "source": "adzuna",
+      "title": "Data Engineer (m/w/d)",
+      "company": "Enovos Energie Deutschland GmbH",
+      "location": "Sonnenberg, Wiesbaden",
+      "url": "https://www.adzuna.de/details/5844230574?utm_medium=api&utm_source=c76d2273",
+      "date_posted": "2026-08-16",
+      "description": "Wir suchen Verstärkung. Werden Sie Teil unseres Teams in Wiesbaden. Data Engineer (m/w/d) Spannende Aufgaben erwarten Sie Sie entwickeln unsere AWS-basierte Datenplattform gemeinsam mit Ihrem Team kontinuierlich weiter. Sie entwickeln und betreiben Datenpipelines auf Basis von AWS-Services (z.B. S3, Redshift und Apache Airflow). Sie automatisieren ETL- und ELT-Prozesse und stellen Daten zuverlässig für Analytics und Business Intelligence bereit. Sie evaluieren moderne KI-gestützte Werkzeuge , b…",
+      "score": 11,
+      "matched_skills": [
+        "airflow",
+        "etl",
+        "aws"
+      ],
+      "matched_role": "data engineer",
+      "matched_visa": "",
+      "distance_km": 31.79065624233371,
+      "first_seen": "2026-08-17T05:25:18.461101+00:00"
+    },
+    {
+      "id": "europe_fulltime:adzuna:5844840272",
+      "market": "europe_fulltime",
+      "market_label": "Europe (Full-Time)",
+      "source": "adzuna",
+      "title": "Duales Masterprogramm (M. Sc.) im Bereich Big Data Engineering 2027",
+      "company": "REWE Group",
+      "location": "Köln, Nordrhein-Westfalen",
+      "url": "https://www.adzuna.de/land/ad/5844840272?se=iEyEE_yZ8RG9TcAFdyg_YQ&utm_medium=api&utm_source=c76d2273&v=094AD6B0B9C90B773533766D93DAFDF44B6417CC",
+      "date_posted": "2026-08-17",
+      "description": "Ort: 50668 Köln | Vertragsart: Vollzeit, befristet | Job-ID: 964813 Ausbildungsbeginn: 01.09.2027 | geplantes Ausbildungsende: 28.02.2030 (*)Wir haben den ganzen Ausschreibungstext selbst geschrieben und keine GenAI wie ChatGPT verwendet! Warum Big Data Engineering bei der REWE Group: Die REWE Group hat als modernes Handelsunternehmen einen umfassenden Datenschatz vom Einkauf über die Logistik bis hin zu unseren Märkten und Kund:innen. Unsere Fragestellungen sind anspruchsvoll, aber nicht abstr…",
+      "score": 7,
+      "matched_skills": [
+        "big data"
+      ],
+      "matched_role": "data engineering",
+      "matched_visa": "",
+      "distance_km": 152.14847056283068,
+      "first_seen": "2026-08-17T05:25:18.461101+00:00"
+    },
+    {
+      "id": "europe_fulltime:adzuna:5842841108",
+      "market": "europe_fulltime",
+      "market_label": "Europe (Full-Time)",
+      "source": "adzuna",
+      "title": "(Junior) Data Scientist (m/w/d) - Datenbankentwicklung/BI, Ingenieur",
+      "company": "Reply Deutschland SE",
+      "location": "München, München (Kreis)",
+      "url": "https://www.adzuna.de/details/5842841108?utm_medium=api&utm_source=c76d2273",
+      "date_posted": "2026-08-15",
+      "description": " Aufgaben - Als (Junior) Data Scientist (m/w/d) entwickelst und implementierst du eigenständig Datenmodelle und -algorithmen für unsere kundenspezifischen Lösungen. Dabei identifizierst und analysierst du Probleme in einem analytischen Rahmen - Du entwickelst und wartest Datenpipelines und Dashboards. Dabei arbeitest du an einer Vielzahl von datenbezogenen Komponenten wie Datenplattformen, Dashboards und Produkten rund um Data und Machine Learning - Arbeit an komplexen Projekten und Datensätzen…",
+      "score": 10,
+      "matched_skills": [
+        "machine learning"
+      ],
+      "matched_role": "junior",
+      "matched_visa": "",
+      "distance_km": 303.0751521002441,
+      "first_seen": "2026-08-17T05:25:18.461101+00:00"
+    },
+    {
+      "id": "europe_fulltime:adzuna:5844039240",
+      "market": "europe_fulltime",
+      "market_label": "Europe (Full-Time)",
+      "source": "adzuna",
+      "title": "Machine Learning Engineer Confirmé - H/F",
+      "company": "Leroy Merlin",
+      "location": "Nord, Hauts-De-France",
+      "url": "https://www.adzuna.fr/details/5844039240?utm_medium=api&utm_source=c76d2273",
+      "date_posted": "2026-08-16",
+      "description": "Chez Leroy Merlin, nous sommes convaincus qu’un parcours professionnel réussi passe avant tout par des projets porteurs de sens et d’impact. Dans le cadre d'un remplacement de poste visant à sécuriser et accélérer l’adoption de l'Intelligence Artificielle au sein de l'entreprise, nous recrutons un Machine Learning Engineer Confirmé H/F au sein de l’équipe IA de la Direction Xperience Digitale de Leroy Merlin France. Votre terrain de jeu Vous rejoignez une équipe IA transverse et agile de 15 exp…",
+      "score": 7,
+      "matched_skills": [
+        "machine learning"
+      ],
+      "matched_role": "machine learning",
+      "matched_visa": "",
+      "distance_km": 393.23959611930684,
+      "first_seen": "2026-08-17T05:25:18.461101+00:00"
+    },
+    {
+      "id": "europe_fulltime:adzuna:5844037646",
+      "market": "europe_fulltime",
+      "market_label": "Europe (Full-Time)",
+      "source": "adzuna",
+      "title": "First Machine Learning Engineer LLM - Callbot AI - SaaS B2B2C || Paris - 4 jours de remote",
+      "company": "Data Recrutement",
+      "location": "Paris, Ile-de-France",
+      "url": "https://www.adzuna.fr/details/5844037646?utm_medium=api&utm_source=c76d2273",
+      "date_posted": "2026-08-16",
+      "description": "L'ENTREPRISE : Start-up pionnière des callbots Pionnier européen des callbots, l'entreprise permet aux centres de contact de libérer des milliers d'heures pour permettre aux agents de se concentrer sur les interactions à forte valeur ajoutée. En direct avec le CTO, en tant que ML Engineer, vous serez en première ligne pour construire l’une des solutions d’IA les plus innovantes et complexes du marché, contribuant directement à résoudre les problèmes des millions de clients finaux. Pourquoi ai-j…",
+      "score": 11,
+      "matched_skills": [
+        "llm",
+        "machine learning"
+      ],
+      "matched_role": "machine learning",
+      "matched_visa": "",
+      "distance_km": 478.1482111112112,
+      "first_seen": "2026-08-17T05:25:18.461101+00:00"
+    },
+    {
+      "id": "europe_fulltime:adzuna:5844038230",
+      "market": "europe_fulltime",
+      "market_label": "Europe (Full-Time)",
+      "source": "adzuna",
+      "title": "Data Engineer (Databricks /Azure)",
+      "company": "Groupement Les Mousquetaires",
+      "location": "Hauts-de-Seine, Ile-de-France",
+      "url": "https://www.adzuna.fr/details/5844038230?utm_medium=api&utm_source=c76d2273",
+      "date_posted": "2026-08-16",
+      "description": "Description du poste Twitter LinkedIn Contexte Au sein de la Direction des SI Mutualisés, l’équipe DataLab intervient sur les périmètres Data et Analytics, dans le cadre du programme de transformation du SI du Groupement Les Mousquetaires.Vous intégrerez la Data Factory, un dispositif réunissant les équipes Data de la Stime et des métiers. Sa mission : concevoir et déployer des produits Analytics innovants destinés aux fonctions support, aux équipes logistiques, aux magasins, ainsi qu’aux conso…",
+      "score": 7,
+      "matched_skills": [
+        "databricks"
+      ],
+      "matched_role": "data engineer",
+      "matched_visa": "",
+      "distance_km": 486.3690797881137,
+      "first_seen": "2026-08-17T05:25:18.461101+00:00"
+    },
+    {
+      "id": "europe_fulltime:adzuna:5844038517",
+      "market": "europe_fulltime",
+      "market_label": "Europe (Full-Time)",
+      "source": "adzuna",
+      "title": "Alternant IT - Ingénieur Fiabilité H/F",
+      "company": "GEODIS",
+      "location": "Hauts-de-Seine, Ile-de-France",
+      "url": "https://www.adzuna.fr/details/5844038517?utm_medium=api&utm_source=c76d2273",
+      "date_posted": "2026-08-16",
+      "description": "Description du poste Type de contrat Contrat d'apprentissage Fonction Fonctions Supports - Digital & Technologie Intitulé du poste Alternant IT - Ingénieur Fiabilité H/F Description de la mission En tant qu'alternant en Intelligence Artificielle et Apprentissage Automatique chez GEODIS, vous rejoindrez notre équipe dynamique de Transformation Digitale afin de soutenir et d'accélérer l'adoption des technologies d'IA et de Machine Learning au sein de nos opérations logistiques. Cette alternance p…",
+      "score": 7,
+      "matched_skills": [
+        "machine learning"
+      ],
+      "matched_role": "machine learning",
+      "matched_visa": "",
+      "distance_km": 486.3690797881137,
+      "first_seen": "2026-08-17T05:25:18.461101+00:00"
+    },
+    {
+      "id": "europe_fulltime:adzuna:5844365030",
+      "market": "europe_fulltime",
+      "market_label": "Europe (Full-Time)",
+      "source": "adzuna",
+      "title": "Data Scientist - Bergamo",
+      "company": "Buckler",
+      "location": "Bergamo, Provincia di Bergamo",
+      "url": "https://www.adzuna.it/details/5844365030?utm_medium=api&utm_source=c76d2273",
+      "date_posted": "2026-08-16",
+      "description": "Buckler - Niche Recruitment Scientists. Posizione: Buckler - Niche Recruitment Scientists. The Company: Ricerchiamo un Data Scientist per importante azienda attiva nello sviluppo di soluzioni di Intelligenza Artificiale. The Role: - Acquisire, organizzare e analizzare dati complessi. - Sviluppare e applicare modelli di machine learning e deep learning per la risoluzione di problemi. - Collaborare con altri team per l'implementazione di soluzioni AI in produzione. - Monitorare e ottimizzare le p…",
+      "score": 9,
+      "matched_skills": [
+        "machine learning",
+        "deep learning"
+      ],
+      "matched_role": "data scientist",
+      "matched_visa": "",
+      "distance_km": 496.3158610262014,
+      "first_seen": "2026-08-17T05:25:18.461101+00:00"
+    },
+    {
+      "id": "europe_fulltime:adzuna:5844303615",
+      "market": "europe_fulltime",
+      "market_label": "Europe (Full-Time)",
+      "source": "adzuna",
+      "title": "Software / Machine Learning Engineer",
+      "company": "Prima",
+      "location": "Milano, Provincia di Milano",
+      "url": "https://www.adzuna.it/details/5844303615?utm_medium=api&utm_source=c76d2273",
+      "date_posted": "2026-08-16",
+      "description": "Are you looking for a new challenge? Fancy helping us shape the future of motor insurance? Prima could be the place for you. Since 2015, we’ve been using our love of data and tech to rethink motor insurance and bring drivers a great experience at a great price. Our story began in Italy, where we’ve quickly become the number one online motor insurance provider. In fact, we’re trusted by over 5 million drivers. And now we’re expanding to help millions more drivers in the UK and Spain. To help fue…",
+      "score": 7,
+      "matched_skills": [
+        "machine learning"
+      ],
+      "matched_role": "machine learning",
+      "matched_visa": "",
+      "distance_km": 517.2715101270235,
+      "first_seen": "2026-08-17T05:25:18.461101+00:00"
+    },
+    {
+      "id": "europe_fulltime:adzuna:5844302659",
+      "market": "europe_fulltime",
+      "market_label": "Europe (Full-Time)",
+      "source": "adzuna",
+      "title": "Machine Learning Engineer",
+      "company": "Prima",
+      "location": "Milano, Provincia di Milano",
+      "url": "https://www.adzuna.it/details/5844302659?utm_medium=api&utm_source=c76d2273",
+      "date_posted": "2026-08-16",
+      "description": "Are you looking for a new challenge? Fancy helping us shape the future of motor insurance? Prima could be the place for you. Since 2015, we’ve been using our love of data and tech to rethink motor insurance and bring drivers a great experience at a great price. Our story began in Italy, where we’ve quickly become the number one online motor insurance provider. In fact, we’re trusted by over 5 million drivers. And now we’re expanding to help millions more drivers in the UK and Spain. To help fue…",
+      "score": 7,
+      "matched_skills": [
+        "machine learning"
+      ],
+      "matched_role": "machine learning",
+      "matched_visa": "",
+      "distance_km": 517.2715101270235,
+      "first_seen": "2026-08-17T05:25:18.461101+00:00"
+    },
+    {
+      "id": "europe_fulltime:adzuna:5844185507",
+      "market": "europe_fulltime",
+      "market_label": "Europe (Full-Time)",
+      "source": "adzuna",
+      "title": "Data Engineer Azure Data Factory",
+      "company": "Addepto",
+      "location": "Wrocław, dolnośląskie",
+      "url": "https://www.adzuna.pl/land/ad/5844185507?se=yt99HPyZ8RGymaituqWy4Q&utm_medium=api&utm_source=c76d2273&v=B37F0825313E277F556263A9459C69554056265E",
+      "date_posted": "2026-08-16",
+      "description": "Addepto is a leading AI consulting (https://addepto.com/ai-consulting/) and data engineering (https://addepto.com/data-engineering-services/) company that builds scalable, ROI-focused AI solutions for some of the world's largest enterprises and pioneering startups, including Rolls Royce, Continental, Porsche, ABB, and WGU. With an exclusive focus on Artificial Intelligence and Big Data, Addepto helps organizations unlock the full potential of their data through systems designed for measurable b…",
+      "score": 7,
+      "matched_skills": [
+        "big data"
+      ],
+      "matched_role": "data engineer",
+      "matched_visa": "",
+      "distance_km": 599.6536173587076,
+      "first_seen": "2026-08-17T05:25:18.461101+00:00"
+    },
+    {
+      "id": "europe_fulltime:adzuna:5844313934",
+      "market": "europe_fulltime",
+      "market_label": "Europe (Full-Time)",
+      "source": "adzuna",
+      "title": "Software / Machine Learning Engineer",
+      "company": "Prima",
+      "location": "London, UK",
+      "url": "https://www.adzuna.co.uk/jobs/details/5844313934?utm_medium=api&utm_source=c76d2273",
+      "date_posted": "2026-08-16",
+      "description": "Are you looking for a new challenge? Fancy helping us shape the future of motor insurance? Prima could be the place for you. Since 2015, we’ve been using our love of data and tech to rethink motor insurance and bring drivers a great experience at a great price. Our story began in Italy, where we’ve quickly become the number one online motor insurance provider. In fact, we’re trusted by over 5 million drivers. And now we’re expanding to help millions more drivers in the UK and Spain. To help fue…",
+      "score": 7,
+      "matched_skills": [
+        "machine learning"
+      ],
+      "matched_role": "machine learning",
+      "matched_visa": "",
+      "distance_km": 638.4555987635766,
+      "first_seen": "2026-08-17T05:25:18.461101+00:00"
+    },
+    {
+      "id": "europe_fulltime:adzuna:5844297405",
+      "market": "europe_fulltime",
+      "market_label": "Europe (Full-Time)",
+      "source": "adzuna",
+      "title": "Machine Learning Engineer",
+      "company": "Prima",
+      "location": "London, UK",
+      "url": "https://www.adzuna.co.uk/jobs/details/5844297405?utm_medium=api&utm_source=c76d2273",
+      "date_posted": "2026-08-16",
+      "description": "Are you looking for a new challenge? Fancy helping us shape the future of motor insurance? Prima could be the place for you. Since 2015, we’ve been using our love of data and tech to rethink motor insurance and bring drivers a great experience at a great price. Our story began in Italy, where we’ve quickly become the number one online motor insurance provider. In fact, we’re trusted by over 5 million drivers. And now we’re expanding to help millions more drivers in the UK and Spain. To help fue…",
+      "score": 7,
+      "matched_skills": [
+        "machine learning"
+      ],
+      "matched_role": "machine learning",
+      "matched_visa": "",
+      "distance_km": 638.4555987635766,
+      "first_seen": "2026-08-17T05:25:18.461101+00:00"
+    },
+    {
+      "id": "europe_fulltime:adzuna:5844081785",
+      "market": "europe_fulltime",
+      "market_label": "Europe (Full-Time)",
+      "source": "adzuna",
+      "title": "Machine Learning Engineering & Applied AI ML Lead - Vice President",
+      "company": "J.P. Morgan",
+      "location": "London, UK",
+      "url": "https://www.adzuna.co.uk/jobs/land/ad/5844081785?se=-Ba8HvyZ8RGqM9tlrK2FfQ&utm_medium=api&utm_source=c76d2273&v=34A4EE9D8A83552158A4E63751FAB64C91CDF44C",
+      "date_posted": "2026-08-16",
+      "description": "hackajob is collaborating with J.P. Morgan to connect them with exceptional professionals for this role. JOB DESCRIPTION Join us in shaping the future of AI at JPMorganChase, where you can make a real impact by building autonomous agents that solve critical challenges. We value your expertise and encourage you to pioneer new approaches, bridging theory and practice while collaborating with talented teams across the globe to help define how AI transforms the world's largest bank. Experience care…",
+      "score": 7,
+      "matched_skills": [
+        "machine learning"
+      ],
+      "matched_role": "machine learning",
+      "matched_visa": "",
+      "distance_km": 638.4555987635766,
+      "first_seen": "2026-08-17T05:25:18.461101+00:00"
+    },
+    {
+      "id": "europe_fulltime:adzuna:5844368610",
+      "market": "europe_fulltime",
+      "market_label": "Europe (Full-Time)",
+      "source": "adzuna",
+      "title": "Jr Data Scientist",
+      "company": "Hyntelo srl",
+      "location": "Pisa, Provincia di Pisa",
+      "url": "https://www.adzuna.it/details/5844368610?utm_medium=api&utm_source=c76d2273",
+      "date_posted": "2026-08-16",
+      "description": "THE ROLE Hyntelo is seeking a Junior Data Scientist to join our Engineering and Data Science team in Pisa. Your main responsibilities will be to develop ETL solutions, predictive models by leveraging machine learning algorithms and POCs based on the requests of our clients. You are proactive, you have strong critical thinking and you like developing code to train machine learning model and test them on real use cases. REQUIREMENTS: - Strong knowledge of python (pandas, numpy, scikit-learn) - Go…",
+      "score": 13,
+      "matched_skills": [
+        "python",
+        "etl",
+        "scikit-learn",
+        "machine learning"
+      ],
+      "matched_role": "data scientist",
+      "matched_visa": "",
+      "distance_km": 726.0134704677043,
+      "first_seen": "2026-08-17T05:25:18.461101+00:00"
+    },
+    {
+      "id": "europe_fulltime:adzuna:5844185498",
+      "market": "europe_fulltime",
+      "market_label": "Europe (Full-Time)",
+      "source": "adzuna",
+      "title": "Data Engineer Azure Data Factory",
+      "company": "Addepto",
+      "location": "Katowice, śląskie",
+      "url": "https://www.adzuna.pl/land/ad/5844185498?se=yt99HPyZ8RGymaituqWy4Q&utm_medium=api&utm_source=c76d2273&v=9D348BA013000BD2C96E6C1033273D68627D0448",
+      "date_posted": "2026-08-16",
+      "description": "Addepto is a leading AI consulting (https://addepto.com/ai-consulting/) and data engineering (https://addepto.com/data-engineering-services/) company that builds scalable, ROI-focused AI solutions for some of the world's largest enterprises and pioneering startups, including Rolls Royce, Continental, Porsche, ABB, and WGU. With an exclusive focus on Artificial Intelligence and Big Data, Addepto helps organizations unlock the full potential of their data through systems designed for measurable b…",
+      "score": 7,
+      "matched_skills": [
+        "big data"
+      ],
+      "matched_role": "data engineer",
+      "matched_visa": "",
+      "distance_km": 736.0284764299394,
+      "first_seen": "2026-08-17T05:25:18.461101+00:00"
+    },
+    {
+      "id": "europe_fulltime:adzuna:5844482232",
+      "market": "europe_fulltime",
+      "market_label": "Europe (Full-Time)",
+      "source": "adzuna",
+      "title": "Software Engineer III - AI/ML Platform Reliability",
+      "company": "J.P. Morgan",
+      "location": "Bournemouth, Dorset",
+      "url": "https://www.adzuna.co.uk/jobs/land/ad/5844482232?se=nN3FHfyZ8RGJftUyzQ0_4w&utm_medium=api&utm_source=c76d2273&v=03009B8B02CE62CE29C168C9C9E6031B9C3DF1E4",
+      "date_posted": "2026-08-16",
+      "description": "hackajob is collaborating with J.P. Morgan to connect them with exceptional professionals for this role. JOB DESCRIPTION Are you passionate about building resilient, scalable systems that power the future of AI? At JPMorganChase, we're pushing the boundaries of what's possible with artificial intelligence and machine learning - and we need engineers like you to help us do it reliably, securely, and at scale. As a Software Engineer III at JPMorganChase within the AI/ML Data Platforms organizatio…",
+      "score": 7,
+      "matched_skills": [
+        "machine learning"
+      ],
+      "matched_role": "machine learning",
+      "matched_visa": "",
+      "distance_km": 750.6919732654309,
+      "first_seen": "2026-08-17T05:25:18.461101+00:00"
+    },
+    {
+      "id": "europe_fulltime:adzuna:5844041756",
+      "market": "europe_fulltime",
+      "market_label": "Europe (Full-Time)",
+      "source": "adzuna",
+      "title": "Konsultantka IT / Konsultant IT",
+      "company": "BCF Software Sp. z o.o.",
+      "location": "Płock, mazowieckie",
+      "url": "https://www.adzuna.pl/details/5844041756?utm_medium=api&utm_source=c76d2273",
+      "date_posted": "2026-08-16",
+      "description": "Konsultantka IT / Konsultant IT Miejsce pracy: Płock Technologie, których używamy Wymagane Google Cloud Platform BigQuery CloudComposer Cloud Storage Python .NET Core React.js Angular Apache Airflow SQL API REST Mile widziane Dataform O projekcie Poszukujemy doświadczonego Konsultanta IT / Architekta Danych / Data Integration Engineera, który dołączy do zespołu odpowiedzialnego za rozwój nowoczesnej platformy danych oraz budowę rozwiązań aplikacyjnych wspierających kluczowe procesy biznesowe i …",
+      "score": 6,
+      "matched_skills": [
+        "python",
+        "sql",
+        "airflow"
+      ],
+      "matched_role": "",
+      "matched_visa": "",
+      "distance_km": 815.5195312683958,
+      "first_seen": "2026-08-17T05:25:18.461101+00:00"
+    },
+    {
+      "id": "europe_fulltime:adzuna:5844185497",
+      "market": "europe_fulltime",
+      "market_label": "Europe (Full-Time)",
+      "source": "adzuna",
+      "title": "Data Engineer Azure Data Factory",
+      "company": "Addepto",
+      "location": "Kraków, małopolskie",
+      "url": "https://www.adzuna.pl/land/ad/5844185497?se=yt99HPyZ8RGymaituqWy4Q&utm_medium=api&utm_source=c76d2273&v=804FF8A3496DAE2B98864ECCF2D623BCB1207062",
+      "date_posted": "2026-08-16",
+      "description": "Addepto is a leading AI consulting (https://addepto.com/ai-consulting/) and data engineering (https://addepto.com/data-engineering-services/) company that builds scalable, ROI-focused AI solutions for some of the world's largest enterprises and pioneering startups, including Rolls Royce, Continental, Porsche, ABB, and WGU. With an exclusive focus on Artificial Intelligence and Big Data, Addepto helps organizations unlock the full potential of their data through systems designed for measurable b…",
+      "score": 7,
+      "matched_skills": [
+        "big data"
+      ],
+      "matched_role": "data engineer",
+      "matched_visa": "",
+      "distance_km": 819.0661647117378,
+      "first_seen": "2026-08-17T05:25:18.461101+00:00"
+    },
+    {
+      "id": "europe_fulltime:adzuna:5844185499",
+      "market": "europe_fulltime",
+      "market_label": "Europe (Full-Time)",
+      "source": "adzuna",
+      "title": "Data Engineer Azure Data Factory",
+      "company": "Addepto",
+      "location": "Gdańsk, Trójmiasto",
+      "url": "https://www.adzuna.pl/land/ad/5844185499?se=yt99HPyZ8RGymaituqWy4Q&utm_medium=api&utm_source=c76d2273&v=399B5DF5977317C1AB7A929710E8EE8B91F67037",
+      "date_posted": "2026-08-16",
+      "description": "Addepto is a leading AI consulting (https://addepto.com/ai-consulting/) and data engineering (https://addepto.com/data-engineering-services/) company that builds scalable, ROI-focused AI solutions for some of the world's largest enterprises and pioneering startups, including Rolls Royce, Continental, Porsche, ABB, and WGU. With an exclusive focus on Artificial Intelligence and Big Data, Addepto helps organizations unlock the full potential of their data through systems designed for measurable b…",
+      "score": 7,
+      "matched_skills": [
+        "big data"
+      ],
+      "matched_role": "data engineer",
+      "matched_visa": "",
+      "distance_km": 825.1928765487213,
+      "first_seen": "2026-08-17T05:25:18.461101+00:00"
+    },
+    {
+      "id": "europe_fulltime:adzuna:5844197595",
+      "market": "europe_fulltime",
+      "market_label": "Europe (Full-Time)",
+      "source": "adzuna",
+      "title": "Data and AI Graduate",
+      "company": "Sage",
+      "location": "Newcastle Upon Tyne, Tyne & Wear",
+      "url": "https://www.adzuna.co.uk/jobs/land/ad/5844197595?se=-Ba8HvyZ8RGqM9tlrK2FfQ&utm_medium=api&utm_source=c76d2273&v=394253265836714FCF66328DEACF04C4B68B114D",
+      "date_posted": "2026-08-16",
+      "description": "Job Title Data and AI Graduate Job Description Start your career at Sage in a role focused on artificial intelligence, data engineering and responsible innovation. You will build practical experience in how trusted data powers AI, how scalable data platforms support better decisions, and how emerging technology can be applied safely and effectively across a global software business. Why join Sage as a graduate? As a graduate, you will be supported with structured learning, access to mentors and…",
+      "score": 8,
+      "matched_skills": [],
+      "matched_role": "graduate",
+      "matched_visa": "",
+      "distance_km": 890.4883217394104,
+      "first_seen": "2026-08-17T05:25:18.461101+00:00"
+    },
+    {
+      "id": "europe_fulltime:adzuna:5844185428",
+      "market": "europe_fulltime",
+      "market_label": "Europe (Full-Time)",
+      "source": "adzuna",
+      "title": "Machine Learning Platform Engineer",
+      "company": "Talentica",
+      "location": "Warszawa, mazowieckie",
+      "url": "https://www.adzuna.pl/land/ad/5844185428?se=lGUjHfyZ8RGpTryJ8e3q1A&utm_medium=api&utm_source=c76d2273&v=452D341BFD785E607722C7AFADDB9EADEC5A470A",
+      "date_posted": "2026-08-16",
+      "description": "Machine Learning Platform Engineer About the Company Our client is a remote-first global AI product company building a proactive smart assistant for everyday users. The product brings intelligence to conversations, everyday tasks, organization, and workflows while requiring minimal prompting. The platform is designed to reliably execute long-running workflows, retain persistent context, and complete real-world tasks. It must support multi-step reasoning, interact with external tools, and remain…",
+      "score": 9,
+      "matched_skills": [
+        "machine learning"
+      ],
+      "matched_role": "machine learning",
+      "matched_visa": "",
+      "distance_km": 905.4568667023702,
+      "first_seen": "2026-08-17T05:25:18.461101+00:00"
+    },
+    {
+      "id": "europe_fulltime:adzuna:5844049969",
+      "market": "europe_fulltime",
+      "market_label": "Europe (Full-Time)",
+      "source": "adzuna",
+      "title": "MACHINE LEARNING ENGINEER",
+      "company": "Time is Brain, SL",
+      "location": "Barcelona, Cataluña",
+      "url": "https://www.adzuna.es/details/5844049969?utm_medium=api&utm_source=c76d2273",
+      "date_posted": "2026-08-16",
+      "description": "About Time is Brain Time is Brain is a technology-based spin-off of the Fundació d'Investigació en Ciències de la Salut Germans Trias i Pujol (IGTP), founded in 2020 to develop BraiN20®, a portable medical device that aims to transform stroke diagnosis and prognosis by automatically monitoring brain electrical activity in real time. We are looking for an experienced Senior ML Engineer to join our multidisciplinary R&D team and contribute to the next generation of BraiN20®. You will work in a mu…",
+      "score": 7,
+      "matched_skills": [
+        "machine learning"
+      ],
+      "matched_role": "machine learning",
+      "matched_visa": "",
+      "distance_km": 1092.8298436840591,
+      "first_seen": "2026-08-17T05:25:18.461101+00:00"
+    },
+    {
+      "id": "europe_fulltime:adzuna:5844049952",
+      "market": "europe_fulltime",
+      "market_label": "Europe (Full-Time)",
+      "source": "adzuna",
+      "title": "machine learning engineer in security",
+      "company": "Enfint",
+      "location": "Barcelona, Cataluña",
+      "url": "https://www.adzuna.es/details/5844049952?utm_medium=api&utm_source=c76d2273",
+      "date_posted": "2026-08-16",
+      "description": "Описание Apple builds large-scale machine learning systems that protect millions of users from emerging threats and ensure the integrity of its products. The Data and ML Innovation team develops security and abuse detection systems while upholding user privacy. Задачи Design, build, and deploy production-grade ML models to detect and mitigate abuse across text, image, and audio Own the full ML lifecycle from prototyping and data analysis through deployment, monitoring, and continuous production…",
+      "score": 7,
+      "matched_skills": [
+        "machine learning"
+      ],
+      "matched_role": "machine learning",
+      "matched_visa": "",
+      "distance_km": 1092.8298436840591,
+      "first_seen": "2026-08-17T05:25:18.461101+00:00"
+    },
+    {
+      "id": "europe_fulltime:adzuna:5844543945",
+      "market": "europe_fulltime",
+      "market_label": "Europe (Full-Time)",
+      "source": "adzuna",
+      "title": "Data Scientist",
+      "company": "Akuaro",
+      "location": "Barcelona",
+      "url": "https://www.adzuna.es/details/5844543945?utm_medium=api&utm_source=c76d2273",
+      "date_posted": "2026-08-16",
+      "description": "Job-ID: 6b800a11-bedbb8-e1cffa7bReference: JLocation: Barcelona, SpainJob type: Full-time, HybridSalary: EUR Category: DataStack: Python, Machine Learning, MLOps, SQL, AzureContact: , , ,  empresa líder en el sector industrial europeo está inmersa en una ambiciosa transformación digital, integrando activamente la inteligencia artificial en el corazón de sus operaciones. Con múltiples iniciativas en Datos e IA que abarcan áreas clave como producción, energía, calidad, mantenimiento, logística y …",
+      "score": 11,
+      "matched_skills": [
+        "python",
+        "sql",
+        "machine learning"
+      ],
+      "matched_role": "data scientist",
+      "matched_visa": "",
+      "distance_km": 1093.5299599251873,
+      "first_seen": "2026-08-17T05:25:18.461101+00:00"
+    },
+    {
+      "id": "europe_fulltime:adzuna:5844541877",
+      "market": "europe_fulltime",
+      "market_label": "Europe (Full-Time)",
+      "source": "adzuna",
+      "title": "Data Engineer",
+      "company": "Akuaro",
+      "location": "Barcelona",
+      "url": "https://www.adzuna.es/details/5844541877?utm_medium=api&utm_source=c76d2273",
+      "date_posted": "2026-08-16",
+      "description": "Job-ID: bc98debcf8b-757b7b496a94Reference: JLocation: Barcelona, SpainJob type: Full-time, HybridSalary:  brutos anualesCategory: DataStack: Python, Azure, Databricks, Kafka, MLOpsContact: , ,  empresa líder en su sector industrial europeo busca un Data Engineer Senior para unirse a su nueva Oficina de Transformación Digital.Esta es una oportunidad única para tener un impacto significativo en la estrategia de datos e inteligencia artificial de una compañía con un sólido backlog de iniciativas e…",
+      "score": 11,
+      "matched_skills": [
+        "python",
+        "kafka",
+        "databricks"
+      ],
+      "matched_role": "data engineer",
+      "matched_visa": "",
+      "distance_km": 1093.5299599251873,
+      "first_seen": "2026-08-17T05:25:18.461101+00:00"
+    },
+    {
+      "id": "europe_fulltime:adzuna:5844542138",
+      "market": "europe_fulltime",
+      "market_label": "Europe (Full-Time)",
+      "source": "adzuna",
+      "title": "Data Scientist - €36.000 - €40.000 Al Año",
+      "company": "Mática Partners",
+      "location": "Barcelona",
+      "url": "https://www.adzuna.es/details/5844542138?utm_medium=api&utm_source=c76d2273",
+      "date_posted": "2026-08-16",
+      "description": "¿Te apasiona el BigData? ¿Quieres formar parte de un equipo con una de las trayectorias más solventes en el mundo del Machine Learning, Analytics y BigData? ¿Te apetece trabajar en una compañía joven, participativa y especializada? Para ello solo exigimos un requisito, que tus respuestas a las preguntas anteriores hayan sido: ¡SÍ! En Mática Partners, trabajamos continuamente para mantenernos a la vanguardia tecnológica, y además somos una empresa People Centric, ponemos al trabajador en el cent…",
+      "score": 7,
+      "matched_skills": [
+        "machine learning"
+      ],
+      "matched_role": "data scientist",
+      "matched_visa": "",
+      "distance_km": 1093.5299599251873,
+      "first_seen": "2026-08-17T05:25:18.461101+00:00"
+    },
+    {
+      "id": "europe_fulltime:adzuna:5844546689",
+      "market": "europe_fulltime",
+      "market_label": "Europe (Full-Time)",
+      "source": "adzuna",
+      "title": "Machine Learning Engineer, Personalization",
+      "company": "Dow Jones",
+      "location": "Barcelona",
+      "url": "https://www.adzuna.es/details/5844546689?utm_medium=api&utm_source=c76d2273",
+      "date_posted": "2026-08-16",
+      "description": "Job Description:Machine Learning Engineer, PersonalizationDow JonesJob Location: BarcelonaAbout the Team:Our Technology team drives the evolution of our Engineering, Data, Product and User Experience functions. With a keen focus on delivering cutting-edge solutions, we shape the digital landscape for our customers, readers and users. From revolutionizing visuals to optimizing tools and harnessing the power of data, mobile, video and social platforms, our team is committed to providing a seamles…",
+      "score": 7,
+      "matched_skills": [
+        "machine learning"
+      ],
+      "matched_role": "machine learning",
+      "matched_visa": "",
+      "distance_km": 1093.5299599251873,
+      "first_seen": "2026-08-17T05:25:18.461101+00:00"
+    },
+    {
+      "id": "europe_fulltime:adzuna:5844541816",
+      "market": "europe_fulltime",
+      "market_label": "Europe (Full-Time)",
+      "source": "adzuna",
+      "title": "Machine Learning Engineer, Personalization",
+      "company": "Dow Jones",
+      "location": "Barcelona",
+      "url": "https://www.adzuna.es/details/5844541816?utm_medium=api&utm_source=c76d2273",
+      "date_posted": "2026-08-16",
+      "description": "Job Description:Machine Learning Engineer, PersonalizationDow Jones Job Location: Barcelona About the Team:Our Technology team drives the evolution of our Engineering, Data, Product and User Experience functions. With a keen focus on delivering cutting-edge solutions, we shape the digital landscape for our customers, readers and users. From revolutionizing visuals to optimizing tools and harnessing the power of data, mobile, video and social platforms, our team is committed to providing a seaml…",
+      "score": 7,
+      "matched_skills": [
+        "machine learning"
+      ],
+      "matched_role": "machine learning",
+      "matched_visa": "",
+      "distance_km": 1093.5299599251873,
+      "first_seen": "2026-08-17T05:25:18.461101+00:00"
+    },
+    {
+      "id": "europe_fulltime:adzuna:5844548876",
+      "market": "europe_fulltime",
+      "market_label": "Europe (Full-Time)",
+      "source": "adzuna",
+      "title": "Data / Ai Engineer",
+      "company": "Inneva Pharma",
+      "location": "Álava, País Vasco",
+      "url": "https://www.adzuna.es/details/5844548876?utm_medium=api&utm_source=c76d2273",
+      "date_posted": "2026-08-16",
+      "description": "Reference: Job ID: Posted: Closing date: Location: VizcayaSalary: Salario acorde a experiencia (per annum)Job type: PermanentIndustry: Tecnología e Internet / Data & Advanced AnalyticsCompany: HaysConsultant: Claudia RojasHays office: Bilbao — Hays Bilbao, Torre Iberdrola Plaza Euskadi, planta 24, oficinas 1-2Phone: Email:  HAYS estamos colaborando con una empresa tecnológica ubicada en Bilbao, dedicada exclusivamente a proyectos de Inteligencia Artificial y Machine Learning.Buscamos un/a Cient…",
+      "score": 7,
+      "matched_skills": [
+        "machine learning"
+      ],
+      "matched_role": "machine learning",
+      "matched_visa": "",
+      "distance_km": 1180.666350719801,
+      "first_seen": "2026-08-17T05:25:18.461101+00:00"
+    },
+    {
+      "id": "europe_fulltime:adzuna:5844335642",
+      "market": "europe_fulltime",
+      "market_label": "Europe (Full-Time)",
+      "source": "adzuna",
+      "title": "Software Engineer (Machine Learning)",
+      "company": "Lightsonic",
+      "location": "UK",
+      "url": "https://www.adzuna.co.uk/jobs/details/5844335642?utm_medium=api&utm_source=c76d2273",
+      "date_posted": "2026-08-16",
+      "description": "About Lightsonic Lightsonic finds water leaks by turning telecoms fibre that's already in the ground into a sensing network. We work with water utilities across the UK and Europe to detect leaks that might otherwise run undetected for months — already saving millions of litres every day, and rising. Backed by strong investment and growing customer traction, we're in an exciting phase of rapid growth and expansion. As an early-stage company with proven technology, we're uniquely positioned to tr…",
+      "score": 7,
+      "matched_skills": [
+        "machine learning"
+      ],
+      "matched_role": "machine learning",
+      "matched_visa": "",
+      "distance_km": null,
+      "first_seen": "2026-08-17T05:25:18.461101+00:00"
+    },
+    {
+      "id": "remote:adzuna:5844472352",
+      "market": "remote",
+      "market_label": "Remote",
+      "source": "adzuna",
+      "title": "Telecoms Support Desk Engineer",
+      "company": "SCG Midlands",
+      "location": "Woodgate, Birmingham",
+      "url": "https://www.adzuna.co.uk/jobs/land/ad/5844472352?se=8gX4K_yZ8RGEkeOd4D9HkQ&utm_medium=api&utm_source=c76d2273&v=8B096E09D8A07B9E6BE6DDEDC0ADA3186B90E03D",
+      "date_posted": "2026-08-16",
+      "description": "Telecoms Support Desk Engineer Location: Quinton, Birmingham Salary £30,000 - £35,000 The Telecoms Support Desk Engineer is responsible for providing high-quality remote technical support for telecommunications and unified communications (UC) systems. The role focuses on incident fault resolution, service request handling, system configuration, and customer support, ensuring services are restored promptly and in line with SLAs. This position requires strong telecoms and, structured troubleshoot…",
+      "score": 8,
+      "matched_skills": [],
+      "matched_role": "technical support",
+      "matched_visa": "",
+      "distance_km": 787.0918298018809,
+      "first_seen": "2026-08-17T05:25:18.461101+00:00"
+    }
+  ]
 }
