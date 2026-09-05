@@ -1,7 +1,6 @@
 """Accumulates scored jobs (across every run, every market) into docs/jobs.json
-for the browsable portal (docs/index.html, served via GitHub Pages). This is a
-superset of what gets emailed — the email caps at MAX_JOBS_PER_EMAIL, the feed
-keeps everything that cleared MIN_SCORE.
+for the browsable portal (docs/index.html, served via GitHub Pages). Keeps
+everything that cleared MIN_SCORE.
 """
 import json
 import os

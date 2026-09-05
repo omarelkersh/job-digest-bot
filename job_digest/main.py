@@ -1,7 +1,7 @@
 import logging
 import os
 
-from . import config, emailer, feed, scoring, store
+from . import config, feed, scoring, store
 from .sources import adzuna, arbeitsagentur, jooble
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
@@ -9,17 +9,6 @@ log = logging.getLogger("job_digest")
 
 DATA_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "seen_jobs.json")
 DRY_RUN = os.environ.get("DRY_RUN", "").lower() in ("1", "true", "yes")
-
-
-def _env(name, required=True, default=None):
-    val = os.environ.get(name, default)
-    if required and not val:
-        # Raise rather than exit the whole process — a missing/broken secret
-        # should fail this one market (caught by main()'s per-market
-        # try/except) without skipping the other markets or the final
-        # seen_store/job_feed save() calls for a completely unrelated reason.
-        raise RuntimeError(f"Missing required environment variable: {name}")
-    return val
 
 
 def gather_europe_jobs():
@@ -123,7 +112,7 @@ def run_market(market_key, seen_store, job_feed, now):
     # still legitimately appear in another (e.g. a remote-tagged posting
     # relevant to both the Werkstudent and Remote digests).
     new_jobs = [j for j in jobs if seen_store.is_new(f"{market_key}:{j.dedup_key}")]
-    log.info("[%s] %d unique / %d new (not previously sent)", market_key, len(jobs), len(new_jobs))
+    log.info("[%s] %d unique / %d new (not previously seen)", market_key, len(jobs), len(new_jobs))
 
     scored_all = scoring.score_and_rank(
         new_jobs,
@@ -134,41 +123,18 @@ def run_market(market_key, seen_store, job_feed, now):
     )
     log.info("[%s] %d passed scoring threshold (MIN_SCORE=%d)", market_key, len(scored_all), config.MIN_SCORE)
 
-    # The portal feed keeps everything that cleared the bar; the email is
-    # capped separately so a single digest doesn't get overwhelming.
     if not DRY_RUN:
         for sj in scored_all:
             job_feed.add(market_key, market["label"], sj, now.isoformat())
 
-    scored = scored_all[: config.MAX_JOBS_PER_EMAIL]
-
     # Mark every fetched job (not just ones that scored) as seen, so a
-    # low-scoring posting isn't re-evaluated and potentially emailed later
-    # just because our keyword list changes.
+    # low-scoring posting isn't re-evaluated later just because our keyword
+    # list changes.
     for j in jobs:
         seen_store.mark_seen(f"{market_key}:{j.dedup_key}", market_key, now.isoformat())
 
-    if not scored:
-        log.info("[%s] nothing to send", market_key)
-        return
-
-    subject = f"{market['subject_emoji']} {market['label']} Job Digest — {len(scored)} new match(es) — {now.date().isoformat()}"
-
-    if DRY_RUN:
-        log.info("[%s] DRY_RUN set — not sending email. Subject: %s", market_key, subject)
-        for sj in scored:
-            log.info("  score=%-3d %s @ %s (%s)", sj.score, sj.job.title, sj.job.company, sj.job.url)
-        return
-
-    to_email = os.environ.get(market["recipient_env"]) or os.environ.get("DIGEST_TO_EMAIL")
-    if not to_email:
-        log.error("[%s] no recipient configured (%s or DIGEST_TO_EMAIL)", market_key, market["recipient_env"])
-        return
-
-    gmail_address = _env("GMAIL_ADDRESS")
-    gmail_app_password = _env("GMAIL_APP_PASSWORD")
-    emailer.send_digest(gmail_address, gmail_app_password, to_email, subject, market["label"], scored)
-    log.info("[%s] sent digest to %s (%d jobs)", market_key, to_email, len(scored))
+    for sj in scored_all:
+        log.info("  score=%-3d %s @ %s (%s)", sj.score, sj.job.title, sj.job.company, sj.job.url)
 
 
 def main():

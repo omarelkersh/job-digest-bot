@@ -1,8 +1,8 @@
 # Daily Job Digest Bot
 
 Fetches Data Engineering, Data Science, ML Engineering and MLOps postings
-once a day, scores them against Omar's CV, and emails four separate
-digests:
+once a day, scores them against Omar's CV, and sorts them into four separate
+markets, all browsable in the [job portal](#job-portal):
 
 - **🇪🇺 Europe (Werkstudent)** — Germany only, part-time/student-job focused
   (Bundesagentur für Arbeit + Adzuna). Requires an explicit Werkstudent/
@@ -28,7 +28,7 @@ digests:
   etc.) to qualify — a plain title-keyword match on-site doesn't count.
 
 Every market also sorts by proximity to Frankfurt (Omar is based in nearby
-Darmstadt) — closer postings are listed first within each email, using real
+Darmstadt) — closer postings are listed first within each market, using real
 coordinates when the source provides them (Bundesagentur always does) or a
 city-name fallback otherwise. This is purely a display-order tiebreaker —
 it never affects whether a posting is included or dropped (that's decided
@@ -39,11 +39,11 @@ Runs for free on GitHub Actions, once a day, no server to maintain.
 
 ## Job portal
 
-Every job that clears the score threshold (not just the ones capped into an
-email) also lands in a browsable portal — search, filter by market/score/
-status, sort by distance-to-Frankfurt, track status (New → Shortlisted →
-Applied → Interview → Rejected), and generate a tailored CV PDF for any
-specific job with one click.
+Every job that clears the score threshold lands in a browsable portal —
+search, filter by market/score/status, sort by distance-to-Frankfurt, track
+status (New → Shortlisted → Applied → Interview → Rejected), and generate a
+tailored CV PDF for any specific job with one click. This is the only way
+matches are surfaced — there's no email digest.
 
 - **Frontend**: `docs/` — static, hosted free on GitHub Pages, reads
   `docs/jobs.json` (written by every digest run).
@@ -63,8 +63,7 @@ job_digest/
                         German/other-language requirements, full-time-only gate,
                         remote-required gate, easy-role scoring)
   store.py             data/seen_jobs.json dedup store (market-scoped keys)
-  feed.py               docs/jobs.json portal feed (superset of what's emailed)
-  emailer.py            Gmail SMTP HTML/plain-text email
+  feed.py               docs/jobs.json portal feed
   sources/
     arbeitsagentur.py   Bundesagentur für Arbeit Jobsuche API (no signup)
     adzuna.py            Adzuna API (Werkstudent, Europe Full-Time, Remote)
@@ -82,15 +81,13 @@ portal_api/            job portal backend — single Vercel Python (Flask) app
   _shared.py
 ```
 
-Each run: fetch → dedup against `data/seen_jobs.json` → score → email the
-best matches per market → commit the updated dedup file back to the repo.
-If a market has zero new matches above the score threshold, no email is
-sent for it that day.
+Each run: fetch → dedup against `data/seen_jobs.json` → score → add matches
+to `docs/jobs.json` (the portal feed) → commit both files back to the repo.
 
 Dedup keys are **market-scoped** (`"<market>:<source>:<id>"`) — a posting
-already sent in one digest can still legitimately appear in a different
-digest (e.g. a remote-tagged Werkstudent posting is relevant to both the
-Werkstudent and Remote digests). Only repeats *within the same market* are
+already seen in one market can still legitimately appear in a different
+market (e.g. a remote-tagged Werkstudent posting is relevant to both the
+Werkstudent and Remote markets). Only repeats *within the same market* are
 suppressed.
 
 ### Known limitations
@@ -125,15 +122,7 @@ suppressed.
 1. Sign up free at https://jooble.org/api/about
 2. You'll get a single API key.
 
-### 3. Gmail App Password (sends all four digests)
-
-1. Turn on 2-Step Verification on the Gmail account you want to send from:
-   https://myaccount.google.com/security
-2. Generate an App Password: https://myaccount.google.com/apppasswords
-   (choose "Mail" / "Other", name it e.g. "job-digest-bot")
-3. Copy the 16-character password — you won't see it again.
-
-### 4. Create the GitHub repo and push this code
+### 3. Create the GitHub repo and push this code
 
 ```bash
 cd job-digest-bot
@@ -151,7 +140,7 @@ git branch -M main
 git push -u origin main
 ```
 
-### 5. Add GitHub Secrets
+### 4. Add GitHub Secrets
 
 Repo → **Settings → Secrets and variables → Actions → New repository
 secret**. Add each of these:
@@ -161,17 +150,11 @@ secret**. Add each of these:
 | `ADZUNA_APP_ID` | from step 1 |
 | `ADZUNA_APP_KEY` | from step 1 |
 | `JOOBLE_API_KEY` | from step 2 |
-| `GMAIL_ADDRESS` | the Gmail address you generated the app password for |
-| `GMAIL_APP_PASSWORD` | the 16-character app password from step 3 |
-| `DIGEST_TO_EMAIL` | where the Werkstudent digest should land (e.g. your own inbox) |
-| `EUROPE_FULLTIME_DIGEST_TO_EMAIL` | *(optional)* where the Europe Full-Time digest should land — omit to reuse `DIGEST_TO_EMAIL` |
-| `GULF_DIGEST_TO_EMAIL` | *(optional)* where the Gulf digest should land — omit to reuse `DIGEST_TO_EMAIL` |
-| `REMOTE_DIGEST_TO_EMAIL` | *(optional)* where the Remote digest should land — omit to reuse `DIGEST_TO_EMAIL` |
 
 None of these are ever hardcoded in the repo — the workflow reads them
 from `secrets.*` at run time.
 
-### 6. Turn on the Action
+### 5. Turn on the Action
 
 Actions are usually enabled by default on push. Go to the repo's
 **Actions** tab — you should see "Daily Job Digest". Click into it and
@@ -187,16 +170,16 @@ which lands at 06:00–07:00 Europe/Berlin depending on daylight saving.
 cp .env.example .env   # fill in values, or export them directly
 pip install -r requirements.txt
 
-# Preview matches without sending email or touching the dedup store:
+# Preview matches without touching the dedup store or portal feed:
 DRY_RUN=1 python -m job_digest.main
 
-# Send for real:
+# Run for real:
 python -m job_digest.main
 ```
 
-`DRY_RUN=1` logs the subject line and every job that would be sent,
-without emailing anything and without marking jobs as seen — safe to
-re-run repeatedly while tuning.
+`DRY_RUN=1` logs every job that cleared the score threshold, without
+writing to `data/seen_jobs.json` or `docs/jobs.json` — safe to re-run
+repeatedly while tuning.
 
 ## Tuning
 
@@ -225,7 +208,6 @@ All of this lives in `job_digest/config.py`:
   values) are the city-name-tier fallback distance estimate for sources
   without coordinates (Jooble)
 - `MIN_SCORE` (env `DIGEST_MIN_SCORE`, default 6) — minimum score to include
-- `MAX_JOBS_PER_EMAIL` (env `DIGEST_MAX_JOBS_PER_EMAIL`, default 30)
 - `ADZUNA_COUNTRIES` (env, default `de`) — Werkstudent-market countries
 - `ADZUNA_FULLTIME_COUNTRIES` (env, default `de,at,ch,ie,nl,es,fr,it,pl,gb`) /
   `JOOBLE_FULLTIME_LOCATIONS` (env, default `Ireland`) — Europe Full-Time market

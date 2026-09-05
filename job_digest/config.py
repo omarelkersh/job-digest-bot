@@ -125,7 +125,6 @@ ROLE_MATCH_WEIGHT = 8       # explicit Werkstudent/Praktikum/Internship/Thesis h
 DOMAIN_MATCH_WEIGHT = 5     # Data Engineer/Scientist/ML/MLOps hit without a role hit
 LOCATION_BONUS = 2          # Darmstadt / remote mentioned
 MIN_SCORE = int(os.environ.get("DIGEST_MIN_SCORE", "6"))
-MAX_JOBS_PER_EMAIL = int(os.environ.get("DIGEST_MAX_JOBS_PER_EMAIL", "30"))
 
 LOCATION_BONUS_KEYWORDS = ["darmstadt", "remote", "home office", "homeoffice"]
 
@@ -231,30 +230,22 @@ ADZUNA_REMOTE_COUNTRIES = (
 MARKETS = {
     "europe": {
         "label": "Europe (Werkstudent)",
-        "subject_emoji": "\U0001F1EA\U0001F1FA",  # EU flag
-        "recipient_env": "DIGEST_TO_EMAIL",
         "role_queries": EUROPE_ROLE_QUERIES,
         "fulltime_only": False,
         "require_role_match": True,
     },
     "europe_fulltime": {
         "label": "Europe (Full-Time)",
-        "subject_emoji": "\U0001F9F3",  # suitcase
-        "recipient_env": "EUROPE_FULLTIME_DIGEST_TO_EMAIL",
         "role_queries": EUROPE_FULLTIME_ROLE_QUERIES,
         "fulltime_only": True,
     },
     "gulf": {
         "label": "Gulf (Full-Time)",
-        "subject_emoji": "\U0001F3DC️",  # desert
-        "recipient_env": "GULF_DIGEST_TO_EMAIL",
         "role_queries": GULF_ROLE_QUERIES,
         "fulltime_only": True,
     },
     "remote": {
         "label": "Remote",
-        "subject_emoji": "\U0001F3E0",  # house
-        "recipient_env": "REMOTE_DIGEST_TO_EMAIL",
         "role_queries": REMOTE_ROLE_QUERIES,
         "fulltime_only": True,
         "require_remote": True,
